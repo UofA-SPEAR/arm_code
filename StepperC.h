@@ -31,7 +31,6 @@ class Stepper {
     int motor_pin_2;
     int motor_pin_3;
     int motor_pin_4;
-    int motor_pin_5;          // Only 5 phase motor
 
     unsigned long last_step_time; // time stamp in us of when the last step was taken
 };
