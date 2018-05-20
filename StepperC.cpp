@@ -218,11 +218,3 @@ void Stepper::stepMotor(int thisStep)
     }
   }
 }
-
-/*
-  version() returns the version of the library:
-*/
-int Stepper::version(void)
-{
-  return 5;
-}

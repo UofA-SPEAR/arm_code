@@ -17,8 +17,6 @@ class Stepper {
     // mover method:
     void step(int number_of_steps);
 
-    int version(void);
-
   private:
     void stepMotor(int this_step);
 
