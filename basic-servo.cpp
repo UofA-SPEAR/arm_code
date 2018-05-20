@@ -4,20 +4,26 @@
 const int stepPin = 3;
 const int dirPin = 4;
 
+const int stepsPerRevolution = 200
+const int rotationSpeed = 500 // Good range: [300,4000]?
+
 /* Setup
 pinMode(stepPin,OUTPUT);
 pinMode(dirPin,OUTPUT);
 */
 
-void fullRotation(){
+void rotate(int numOfSteps, int direction = HIGH){
+  /*
+  Complete numOfSteps steps with the servo motor
+  direction = HIGH or LOW (Default HIGH)
+  */
 
-  digitalWrite(dirPin,HIGH); // Enables the motor to move in a particular direction
-  // Makes 200 pulses for making one full cycle rotation
-  for(int x = 0; x < 200; x++) {
+  digitalWrite(dirPin,HIGH); //Set motor direction: [HIGH,LOW]
+  for(int x = 0; x < numOfSteps; x++) {
     digitalWrite(stepPin,HIGH);
-    delayMicroseconds(500);
+    delayMicroseconds(rotationSpeed);
     digitalWrite(stepPin,LOW);
-    delayMicroseconds(500);
+    delayMicroseconds(rotationSpeed);
   }
 
 }
