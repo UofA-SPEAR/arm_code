@@ -17,6 +17,9 @@ class Stepper {
     // mover method:
     void step(int number_of_steps);
 
+    // move to radian method:
+    void rotateToRadian(float target_radian);
+
   private:
     void stepMotor(int rotationDelay);
 
@@ -25,6 +28,9 @@ class Stepper {
     int number_of_steps;      // total number of steps this motor can take
     int pin_count;            // how many pins are in use.
     int step_number;          // which step the motor is on
+
+    float radian_per_step;    // used to calculate required steps
+    float current_motor_radian// current motor angle
 
     // motor pin numbers:
     int stepPin;

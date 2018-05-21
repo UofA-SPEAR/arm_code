@@ -4,7 +4,10 @@
 #include "Arduino.h"
 #include "StepperC.h"
 
-Stepper::Stepper(int number_of_steps, int stepPin, int dirPin){
+#define PI 3.14159265358979323846
+
+
+Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin){
   /*
   * two-wire constructor.
   * Sets which wires should control the motor.
@@ -12,7 +15,7 @@ Stepper::Stepper(int number_of_steps, int stepPin, int dirPin){
   this->step_number = 0;     // which step the motor is on
   this->direction = HIGH;    // motor direction
   this->last_step_time = 0;  // time stamp in us of the last step taken
-  this->number_of_steps = number_of_steps; // total number of steps for this motor
+  this->steps_per_rotation = steps_per_rotation; // total number of steps for this motor
 
   // Arduino pins for the motor control connection:
   this->stepPin = stepPin;
@@ -22,6 +25,22 @@ Stepper::Stepper(int number_of_steps, int stepPin, int dirPin){
   pinMode(this->stepPin, OUTPUT);
   pinMode(this->dirPin, OUTPUT);
   digitalWrite(this->dirPin, this->direction); //MIGHT NOT BE FORMATTED CORRECT?
+
+  // Radian related constants
+  this->radian_per_step = (2 * PI) / steps_per_rotation;
+  this->current_motor_radian = 0 //How do you know position 0?
+}
+
+
+void Stepper::rotateToRadian(float target_radian){
+  /*
+  given target radian rotate to that value using a calculated number of steps
+  */
+  target_radian = target_radian % (2*PI);
+  int required_steps = (target_radian - this->current_motor_radian) * (1/radian_per_step);
+  Serial.println("Current: "+this->current_motor_radian+" required_steps: "+required_steps+" Target: "+target_radian);
+  step(required_steps)
+  this->current_motor_radian = target_radian //hopefully
 }
 
 
@@ -29,7 +48,7 @@ void Stepper::setSpeed(long whatSpeed){
   /*
    * Sets the speed in revs per minute
    */
-  this->step_delay = 60L * 1000L * 1000L / this->number_of_steps / whatSpeed;
+  this->step_delay = 60L * 1000L * 1000L / this->steps_per_rotation / whatSpeed;
 }
 
 
@@ -62,12 +81,12 @@ void Stepper::step(int steps_to_move){
       // depending on direction:
       if (this->direction == HIGH){
         this->step_number++;
-        if (this->step_number == this->number_of_steps) {
+        if (this->step_number == this->steps_per_rotation) {
           this->step_number = 0;
         }
       }else{
         if (this->step_number == LOW) {
-          this->step_number = this->number_of_steps;
+          this->step_number = this->steps_per_rotation;
         }
         this->step_number--;
       }
