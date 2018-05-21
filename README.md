@@ -26,3 +26,11 @@ Arm class
 - wrist stepper
 
 - elbow (DC motor)
+
+Possible Problems
+------------------
+
+- main file doesn't work at all
+- arm code might not work after an hour (micros() max value)
+- only one motor will move at a time
+- delay into step motor might not be correct? 
