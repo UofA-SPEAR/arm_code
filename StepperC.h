@@ -18,7 +18,7 @@ class Stepper {
     void step(int number_of_steps);
 
   private:
-    void stepMotor(int this_step);
+    void stepMotor(int rotationDelay);
 
     int direction;            // Direction of rotation
     unsigned long step_delay; // delay between steps, in ms, based on speed
@@ -27,10 +27,8 @@ class Stepper {
     int step_number;          // which step the motor is on
 
     // motor pin numbers:
-    int motor_pin_1;
-    int motor_pin_2;
-    int motor_pin_3;
-    int motor_pin_4;
+    int stepPin;
+    int dirPin;
 
     unsigned long last_step_time; // time stamp in us of when the last step was taken
 };

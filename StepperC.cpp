@@ -1,29 +1,27 @@
 //copied from https://github.com/arduino/Arduino/blob/master/libraries/Stepper/src/Stepper.cpp
-//TODO: Modify for A4988 Driver compatability and radian mode 
+//TODO: Modify for A4988 Driver compatability and radian mode
 
 #include "Arduino.h"
 #include "StepperC.h"
 
-Stepper::Stepper(int number_of_steps, int motor_pin_1, int motor_pin_2){
+Stepper::Stepper(int number_of_steps, int stepPin, int dirPin){
   /*
   * two-wire constructor.
   * Sets which wires should control the motor.
   */
-  this->step_number = 0;    // which step the motor is on
-  this->direction = 0;      // motor direction
-  this->last_step_time = 0; // time stamp in us of the last step taken
+  this->step_number = 0;     // which step the motor is on
+  this->direction = HIGH;    // motor direction
+  this->last_step_time = 0;  // time stamp in us of the last step taken
   this->number_of_steps = number_of_steps; // total number of steps for this motor
 
   // Arduino pins for the motor control connection:
-  this->motor_pin_1 = motor_pin_1;
-  this->motor_pin_2 = motor_pin_2;
+  this->stepPin = stepPin;
+  this->dirPin = dirPin;
 
   // setup the pins on the microcontroller:
-  pinMode(this->motor_pin_1, OUTPUT);
-  pinMode(this->motor_pin_2, OUTPUT);
-
-  // pin_count is used by the stepMotor() method:
-  this->pin_count = 2;
+  pinMode(this->stepPin, OUTPUT);
+  pinMode(this->dirPin, OUTPUT);
+  digitalWrite(this->dirPin, this->direction); //MIGHT NOT BE FORMATTED CORRECT?
 }
 
 
@@ -43,69 +41,54 @@ void Stepper::step(int steps_to_move){
   int steps_left = abs(steps_to_move);  // how many steps to take
 
   // determine direction based on whether steps_to_mode is + or -:
-  if (steps_to_move > 0) { this->direction = 1; }
-  if (steps_to_move < 0) { this->direction = 0; }
+  if (steps_to_move > 0){
+    this->direction = HIGH;
+    digitalWrite(this->dirPin, direction);
+  }
+  if (steps_to_move < 0){
+    this->direction = LOW;
+    digitalWrite(this->dirPin, direction);
+   }
 
 
   // decrement the number of steps, moving one step each time:
-  while (steps_left > 0)
-  {
-    unsigned long now = micros();
+  while (steps_left > 0){
+    unsigned long now = micros(); // MIGHT >1 hour running problem??
     // move only if the appropriate delay has passed:
-    if (now - this->last_step_time >= this->step_delay)
-    {
+    if (now - this->last_step_time >= this->step_delay){
       // get the timeStamp of when you stepped:
       this->last_step_time = now;
       // increment or decrement the step number,
       // depending on direction:
-      if (this->direction == 1)
-      {
+      if (this->direction == HIGH){
         this->step_number++;
         if (this->step_number == this->number_of_steps) {
           this->step_number = 0;
         }
-      }
-      else
-      {
-        if (this->step_number == 0) {
+      }else{
+        if (this->step_number == LOW) {
           this->step_number = this->number_of_steps;
         }
         this->step_number--;
       }
       // decrement the steps left:
       steps_left--;
-      // step the motor to step number 0, 1, ..., {3 or 10}
-      if (this->pin_count == 5)
-        stepMotor(this->step_number % 10);
-      else
-        stepMotor(this->step_number % 4);
+
+      //Cause pulse of stepper motor
+      //intended runtime of stepMotor is one step_delay
+      stepMotor((unsigned long)(this->step_delay / 2));  //TIME NOT CORRECT?
     }
   }
 }
 
 
-void Stepper::stepMotor(int thisStep){
+void Stepper::stepMotor(int rotationDelay){
   /*
-   * Moves the motor forward or backwards.
-   */
-  if (this->pin_count == 2) {
-    switch (thisStep) {
-      case 0:  // 01
-        digitalWrite(motor_pin_1, LOW);
-        digitalWrite(motor_pin_2, HIGH);
-      break;
-      case 1:  // 11
-        digitalWrite(motor_pin_1, HIGH);
-        digitalWrite(motor_pin_2, HIGH);
-      break;
-      case 2:  // 10
-        digitalWrite(motor_pin_1, HIGH);
-        digitalWrite(motor_pin_2, LOW);
-      break;
-      case 3:  // 00
-        digitalWrite(motor_pin_1, LOW);
-        digitalWrite(motor_pin_2, LOW);
-      break;
-    }
-  }
+  Steps the motor by a single step
+  rotationDelay [300,4000] from example
+  */
+  digitalWrite(stepPin,HIGH); //apparently 2 microseconds?
+  delayMicroseconds(rotationDelay);
+  digitalWrite(stepPin,LOW);
+  delayMicroseconds(rotationDelay);
 }
