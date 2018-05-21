@@ -9,7 +9,7 @@
 class Stepper {
   public:
     // constructors:
-    Stepper(int number_of_steps, int motor_pin_1, int motor_pin_2);
+    Stepper(int number_of_steps, int stepPin, int dirPin);
 
     // speed setter method:
     void setSpeed(long whatSpeed);
