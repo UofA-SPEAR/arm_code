@@ -25,12 +25,12 @@ class Stepper {
 
     int direction;            // Direction of rotation
     unsigned long step_delay; // delay between steps, in ms, based on speed
-    int number_of_steps;      // total number of steps this motor can take
+    int steps_per_rotation;   // # of steps in one rotation of motor
     int pin_count;            // how many pins are in use.
     int step_number;          // which step the motor is on
 
     float radian_per_step;    // used to calculate required steps
-    float current_motor_radian// current motor angle
+    float current_motor_radian;// current motor angle
 
     // motor pin numbers:
     int stepPin;
