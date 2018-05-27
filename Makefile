@@ -18,7 +18,7 @@ endif
 
 # Board Model Tag
 ifndef BOARD_TAG
-BOARD_TAG = mega2560 
+BOARD_TAG = uno 
 endif
 
 # Arduino Included Libraries
