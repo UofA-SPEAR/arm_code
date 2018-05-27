@@ -17,7 +17,6 @@ class Stepper {
     int direction;
     unsigned long step_delay;
     int steps_per_rotation;
-    int pin_count;
     int step_number;
     float radian_per_step;
     float current_motor_radian;
