@@ -11,7 +11,6 @@ class Stepper {
     void step(int number_of_steps);
     void rotateToRadian(float target_radian);
 
-  private:
     void stepMotor(int rotationDelay);
 
     int direction;
