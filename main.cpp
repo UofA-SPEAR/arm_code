@@ -13,14 +13,13 @@ int main(){
 	setup();
 
 	Serial.println("init stepper");
-	int r = 200;
-	Stepper testMotor(r, 12, 13);
+	Stepper testMotor(200, 3, 3);
 
 	Serial.println("setting rotation speed");
-	testMotor.setSpeed(30);
+	testMotor.setSpeed(60);
 
 	Serial.println("stepping full rotation");
-	testMotor.step(r);
+	testMotor.step(60);
 
 	Serial.println("rotate to 1");
 	testMotor.rotateToRadian(1);
