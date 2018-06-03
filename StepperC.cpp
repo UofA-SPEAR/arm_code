@@ -40,15 +40,15 @@ void Stepper::rotateToRadian(float target_radian){
   int required_steps = (target_radian - this->current_motor_radian) * (1/radian_per_step);
   //Serial.println("Current: "+this->current_motor_radian+" required_steps: "+required_steps+" Target: "+target_radian);
   step(required_steps);
-  this->current_motor_radian = target_radian; //hopefully
+  this->current_motor_radian = target_radian % (2*PI); //hopefully
 }
 
 
-void Stepper::setSpeed(long whatSpeed){
+void Stepper::setSpeed(long RPM){
   /*
    * Sets the speed in revs per minute
    */
-  this->step_delay = 60L * 1000L * 1000L / this->steps_per_rotation / whatSpeed;
+  this->step_delay = 60L * 1000L * 1000L / this->steps_per_rotation / RPM;
 }
 
 
@@ -85,7 +85,7 @@ void Stepper::step(int steps_to_move){
           this->step_number = 0;
         }
       }else{
-        if (this->step_number == LOW) {
+        if (this->step_number == LOW) { //nooooot the right variable
           this->step_number = this->steps_per_rotation;
         }
         this->step_number--;
