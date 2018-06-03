@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "StepperC.h"
+#include <Math.h>
 
 #define PI 3.14159265358979323846
 
@@ -40,7 +41,7 @@ void Stepper::rotateToRadian(float target_radian){
   int required_steps = (target_radian - this->current_motor_radian) * (1/radian_per_step);
   //Serial.println("Current: "+this->current_motor_radian+" required_steps: "+required_steps+" Target: "+target_radian);
   step(required_steps);
-  this->current_motor_radian = target_radian % (2*PI); //hopefully
+  this->current_motor_radian = fmod(target_radian, (2*PI)) target_radian % (2*PI); //hopefully
 }
 
 
