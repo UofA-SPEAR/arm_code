@@ -13,7 +13,7 @@ int main(){
 	setup();
 
 	Serial.println("init stepper");
-	Stepper testMotor(200, 3, 3);
+	Stepper testMotor(200, 3, 4);
 
 	Serial.println("setting rotation speed");
 	testMotor.setSpeed(60);
