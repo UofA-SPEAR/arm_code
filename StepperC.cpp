@@ -36,7 +36,15 @@ void Stepper::rotateToRadian(float target_radian){
   given target radian rotate to that value using a calculated number of steps
   */
   //target_radian = target_radian % (2*PI);
-  int required_steps = (target_radian - this->current_motor_radian) * (1/radian_per_step);
+  float diff = (target_radian - this->current_motor_radian);
+  if(diff > PI){
+      diff = diff - 2*PI;
+  }
+  if(diff < -1*PI){
+    diff = abs(2*PI - abs(diff));
+
+  }
+  int required_steps = diff * (1/radian_per_step);
   //Serial.println("Current: "+this->current_motor_radian+" required_steps: "+required_steps+" Target: "+target_radian);
   step(required_steps);
   this->current_motor_radian = fmod(target_radian, (2*PI)); //hopefully
