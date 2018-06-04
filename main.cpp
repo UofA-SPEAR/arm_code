@@ -18,18 +18,23 @@ int main(){
 	Serial.println("setting rotation speed");
 	testMotor.setSpeed(60);
 
-	Serial.println("stepping full rotation");
-	testMotor.step(60);
 
-	Serial.println("rotate to 1");
-	testMotor.rotateToRadian(1);
+	//full angle test
+	for(float base = 0; base < 2*PI; base ++){
+		Serial.println("-------new base-----");
+		testMotor.rotateToRadian(base); //set to base angle
 
-	Serial.println("rotate to 2");
-	testMotor.rotateToRadian(2);
+		//target angles and back
+		for(int target = 1; target < 7; target++){
+			testMotor.rotateToRadian(base + target);
+			delay(500);
+			testMotor.rotateToRadian(base);
+			delay(500);
+		}
 
-	Serial.println("rotate to 1");
-	testMotor.rotateToRadian(1);
+	}
 
+	Serial.println("done");
 
 	return 0;
 }
