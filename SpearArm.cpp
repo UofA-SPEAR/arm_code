@@ -2,6 +2,12 @@
 #include "SpearArm.h"
 #include <Arduino.h>
 
+//Constants for array index of each motor
+#define BASE 0
+#define SHOULDER 1
+#define ELBOW 2
+#define WRIST 3
+#define FINGER 4
 
 Arm::Arm(){
   /*
@@ -26,18 +32,15 @@ Arm::Arm(){
 
 }
 
-void Arm::armTo(){
+void Arm::armTo(float *targets){
   /*
   params: array of floats of target radians for each motor
   will adjust each motor to target radians
   */
 
-  //TEST: rotate all to 1 radian
-  this->BaseStepper->rotateToRadian(1);
-  this->ShoulderStepper->rotateToRadian(1);
-  this->ElbowStepper->rotateToRadian(1);
-  this->WristStepper->rotateToRadian(1);
-  this->FingerStepper->rotateToRadian(1);
-
-
+  this->BaseStepper->rotateToRadian(targets[BASE]);
+  this->ShoulderStepper->rotateToRadian(targets[SHOULDER]);
+  this->ElbowStepper->rotateToRadian(targets[ELBOW]);
+  this->WristStepper->rotateToRadian(targets[WRIST]);
+  this->FingerStepper->rotateToRadian(targets[FINGER]);
 }

@@ -43,7 +43,8 @@ int main(){
 	setup();
 
 	Arm testArm;
-	testArm.armTo();
+	int targets[5] = {1,1,1,1,1};
+	testArm.armTo(targets);
 
 	return 0;
 }

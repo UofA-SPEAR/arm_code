@@ -5,7 +5,7 @@ class Arm{
 
 	public:
 		Arm();
-    void armTo();
+    void armTo(float *targets);
 
 	private:
 
