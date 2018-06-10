@@ -12,7 +12,7 @@ void setup(){
 
 void motorTest(){
 	Serial.println("init stepper");
-	Stepper testMotor(200, 3, 4);
+	Stepper testMotor(200, 3, 4, 0, 2*PI);
 
 	Serial.println("setting rotation speed");
 	testMotor.setSpeed(60);
