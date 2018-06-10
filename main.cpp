@@ -3,6 +3,8 @@
 #include <string.h>
 #include "SpearArm.h"
 
+#include <math.h>
+
 void setup(){
 	init();
 	Serial.begin(9600);
@@ -15,7 +17,7 @@ void motorTest(){
 	Stepper testMotor(200, 3, 4, 0, 2*PI);
 
 	Serial.println("setting rotation speed");
-	testMotor.setSpeed(60);
+	testMotor.setSpeed(120);
 
 
 	//full angle test
@@ -25,10 +27,10 @@ void motorTest(){
 
 		//target angles and back
 		for(int target = 1; target < 7; target++){
-			testMotor.rotateToRadian(base + target);
-			delay(500);
-			testMotor.rotateToRadian(base);
-			delay(500);
+			testMotor.rotateToRadian(fmod(base + target, 2*PI));
+			delay(200);
+			testMotor.rotateToRadian(fmod(base,2*PI));
+			delay(200);
 		}
 
 	}
