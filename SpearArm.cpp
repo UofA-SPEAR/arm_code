@@ -8,6 +8,22 @@ Arm::Arm(){
   Constructor
   */
 
+  //init motor objects
+  this->BaseStepper = Stepper BaseStepper(200, 3, 4);
+  this->ShoulderStepper = Stepper ShoulderStepper(200, 5, 6);
+  this->ElbowStepper = Stepper ElbowStepper(200, 7, 8);
+  this->WristStepper = Stepper WristStepper(200, 9, 10);
+  this->FingerStepper = Stepper FingerStepper(200, 11, 12);
+
+  //set motor speeds
+  this->BaseStepper.setSpeed(60);
+  this->ShoulderStepper.setSpeed(60);
+  this->ElbowStepper.setSpeed(60);
+  this->WristStepper.setSpeed(60);
+  this->FingerStepper.setSpeed(60);
+
+  //
+
 }
 
 void Arm::armTo(){
