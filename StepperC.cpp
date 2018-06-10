@@ -5,7 +5,7 @@
 #include <math.h>
 
 
-Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin){
+Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, float upperBound, float lowerBound){
   /*
   Constructor: 2-pin Stepper motor constructor with A4988 Driver module.
   */
@@ -18,6 +18,8 @@ Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin){
   this->dirPin = dirPin;
   this->radian_per_step = (2 * PI) / steps_per_rotation;
   this->current_motor_radian = 0; //How do you know position 0?
+  this->upperBound = upperBound;
+  this->loweBound = lowerBound;
 
   //setup the pins on the microcontroller:
   pinMode(this->stepPin, OUTPUT);

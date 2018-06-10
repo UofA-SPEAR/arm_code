@@ -6,13 +6,15 @@
 class Stepper {
 
   public:
-    Stepper(int number_of_steps, int stepPin, int dirPin);
+    Stepper(int number_of_steps, int stepPin, int dirPin, float upperBound, float lowerBound);
     void setSpeed(long RPM);
     void step(int number_of_steps);
     void rotateToRadian(float target_radian);
 
     void stepMotor(int rotationDelay);
 
+    float upperBound;
+    float lowerBound;
     int direction;
     unsigned long step_delay;
     int steps_per_rotation;
