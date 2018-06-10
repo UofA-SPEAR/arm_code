@@ -5,7 +5,7 @@
 #include <math.h>
 
 
-Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, float upperBound, float lowerBound){
+Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, float lowerBound, float upperBound){
   /*
   Constructor: 2-pin Stepper motor constructor with A4988 Driver module.
   */
@@ -43,7 +43,7 @@ void Stepper::rotateToRadian(float target_radian){
     diff = abs(2*PI - abs(diff));
 
   }
-  //convert difference radian to number of steps and execute # steps 
+  //convert difference radian to number of steps and execute # steps
   int required_steps = diff * (1/radian_per_step);
   step(required_steps);
   this->current_motor_radian = fmod(target_radian, (2*PI));
