@@ -19,7 +19,7 @@ Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, float upperBou
   this->radian_per_step = (2 * PI) / steps_per_rotation;
   this->current_motor_radian = 0; //How do you know position 0?
   this->upperBound = upperBound;
-  this->loweBound = lowerBound;
+  this->lowerBound = lowerBound;
 
   //setup the pins on the microcontroller:
   pinMode(this->stepPin, OUTPUT);
@@ -32,8 +32,10 @@ void Stepper::rotateToRadian(float target_radian){
   /*
   given target radian rotate to that value using a calculated number of steps
   */
-  //Still need to account for bounds
+  //constrain to motor bounds
+  target_radian = constrain(target_radian, lowerBound, upperBound);
   float diff = (target_radian - this->current_motor_radian);
+  //calculate minimum difference to target angle
   if(diff > PI){
       diff = diff - 2*PI;
   }
@@ -41,9 +43,10 @@ void Stepper::rotateToRadian(float target_radian){
     diff = abs(2*PI - abs(diff));
 
   }
+  //convert difference radian to number of steps and execute # steps 
   int required_steps = diff * (1/radian_per_step);
   step(required_steps);
-  this->current_motor_radian = fmod(target_radian, (2*PI)); //hopefully
+  this->current_motor_radian = fmod(target_radian, (2*PI));
 }
 
 
