@@ -12,7 +12,7 @@ void setup(){
 
 }
 
-void motorTest(){
+void motor_test(){
 	Serial.println("init stepper");
 	Stepper testMotor(200, 3, 4, 0, 2*PI);
 
@@ -39,12 +39,14 @@ void motorTest(){
 
 }
 
+void simple_arm_test(){
+	Arm testArm;
+	float targets[5] = {1,1,1,1,1};
+	testArm.armTo(targets);
+}
+
 int main(){
 	setup();
-
-	Arm testArm;
-	int targets[5] = {1,1,1,1,1};
-	testArm.armTo(targets);
 
 	return 0;
 }
