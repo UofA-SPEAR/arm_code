@@ -10,11 +10,11 @@ class Arm{
 	private:
 
     //Motor instances, one should be a DC motor
-		Stepper BaseStepper;
-		Stepper ShoulderStepper;
-		Stepper ElbowStepper;
-    Stepper WristStepper;
-		Stepper FingerStepper;
+		Stepper* BaseStepper;
+		Stepper* ShoulderStepper;
+		Stepper* ElbowStepper;
+    Stepper* WristStepper;
+		Stepper* FingerStepper;
 
     void setAllZeros();
 

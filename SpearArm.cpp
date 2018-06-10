@@ -9,11 +9,11 @@ Arm::Arm(){
   */
 
   //init motor objects
-  this->BaseStepper = Stepper BaseStepper(200, 3, 4);
-  this->ShoulderStepper = Stepper ShoulderStepper(200, 5, 6);
-  this->ElbowStepper = Stepper ElbowStepper(200, 7, 8);
-  this->WristStepper = Stepper WristStepper(200, 9, 10);
-  this->FingerStepper = Stepper FingerStepper(200, 11, 12);
+  this->BaseStepper = new Stepper(200, 3, 4);
+  this->ShoulderStepper = new Stepper(200, 5, 6);
+  this->ElbowStepper = new Stepper(200, 7, 8);
+  this->WristStepper = new Stepper(200, 9, 10);
+  this->FingerStepper = new Stepper(200, 11, 12);
 
   //set motor speeds
   this->BaseStepper.setSpeed(60);
