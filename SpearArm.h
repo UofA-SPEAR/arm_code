@@ -5,7 +5,7 @@ class Arm{
 
 	public:
 		Arm();
-    armTo();
+    void armTo();
 
 	private:
 
