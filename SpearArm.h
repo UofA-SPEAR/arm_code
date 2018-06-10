@@ -16,8 +16,6 @@ class Arm{
     Stepper* WristStepper;
 		Stepper* FingerStepper;
 
-    void setAllZeros();
-
 };
 
 #endif

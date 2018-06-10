@@ -16,11 +16,11 @@ Arm::Arm(){
   this->FingerStepper = new Stepper(200, 11, 12);
 
   //set motor speeds
-  this->BaseStepper.setSpeed(60);
-  this->ShoulderStepper.setSpeed(60);
-  this->ElbowStepper.setSpeed(60);
-  this->WristStepper.setSpeed(60);
-  this->FingerStepper.setSpeed(60);
+  this->BaseStepper->setSpeed(60);
+  this->ShoulderStepper->setSpeed(60);
+  this->ElbowStepper->setSpeed(60);
+  this->WristStepper->setSpeed(60);
+  this->FingerStepper->setSpeed(60);
 
   //
 
@@ -32,15 +32,4 @@ void Arm::armTo(){
   will adjust each motor to target radians
   */
 
-}
-
-void Arm::setAllZeros(){
-  /*
-  calibration function to overwrite zero angle for all motors
-  */
-  this->BaseStepper.current_motor_radian = 0;
-  this->ShoulderStepper.current_motor_radian = 0;
-  this->ElbowStepper.current_motor_radian = 0;
-  this->WristStepper.current_motor_radian = 0;
-  this->FingerStepper.current_motor_radian = 0;
 }
