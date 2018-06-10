@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "StepperC.h"
 #include <string.h>
+#include "SpearArm.h"
 
 void setup(){
 	init();
@@ -9,9 +10,7 @@ void setup(){
 
 }
 
-int main(){
-	setup();
-
+void motorTest(){
 	Serial.println("init stepper");
 	Stepper testMotor(200, 3, 4);
 
@@ -35,6 +34,14 @@ int main(){
 	}
 
 	Serial.println("done");
+
+}
+
+int main(){
+	setup();
+
+	Arm testArm;
+	testArm.armTo();
 
 	return 0;
 }

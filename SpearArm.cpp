@@ -32,4 +32,12 @@ void Arm::armTo(){
   will adjust each motor to target radians
   */
 
+  //TEST: rotate all to 1 radian 
+  this->BaseStepper->armTo(1);
+  this->ShoulderStepper->armTo(1);
+  this->ElbowStepper->armTo(1);
+  this->WristStepper->armTo(1);
+  this->FingerStepper->armTo(1);
+
+
 }
