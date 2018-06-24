@@ -49,19 +49,17 @@ int main(){
 	setup();
 
 	Arm testArm;
-	char buffer[28];
+	uint32_t buffer[7];
 
 	// need to wait for serial data to be available?
-	Serial.readBytes(buffer, 28); // not sure if this works
-
-	uint32_t* bytes = buffer;
+	Serial.readBytes((char *)buffer, sizeof(uint32_t)*7); // not sure if this works
 
 	double targets[5];
 	for (i=0, i<5, i++) {
 		// convert back to radians
 		// bytes[0] should be the start signal
 		// bytes[1] should be first byte of data
-		targets[i] = (double) (bytes[i+1] / UINT32_MAX * M_PI * 2);
+		targets[i] = (double) (buffer[i+1] / UINT32_MAX * M_PI * 2);
 	}
 
 	testArm.armTo((float)(targets));
