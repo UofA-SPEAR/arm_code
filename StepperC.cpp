@@ -78,8 +78,13 @@ void Stepper::step(int steps_to_move){
   // decrement the number of steps, moving one step each time:
   while (steps_left > 0){
     unsigned long now = micros(); // MIGHT >1 hour running problem?
+
+    // It is important that this subtraction is done in
+    // an assignment to an unsigned variable
+    unsigned long diff = now - this->last_step_time;
+
     // move only if the appropriate delay has passed:
-    if (now - this->last_step_time >= this->step_delay){
+    if (diff >= this->step_delay){
       // get the timeStamp of when you stepped:
       this->last_step_time = now;
       // increment or decrement the step number,
