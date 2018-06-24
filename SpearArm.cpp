@@ -2,6 +2,7 @@
 #include "SpearArm.h"
 #include <Arduino.h>
 
+//R: remove and replace with a struct with one value per motor
 //Constants for array index of each motor
 #define BASE 0
 #define SHOULDER 1
@@ -13,6 +14,14 @@ Arm::Arm(){
   /*
   Constructor
   */
+
+  //R: do not use hardcoded pin numbers. define pin numbers as
+  //   constants, and create a factory method for the default
+  //   conficuration.
+
+
+  //R: Arm has no destructor, so the stepper objects are
+  //   never freed (XXX)
 
   //init motor objects
   this->BaseStepper = new Stepper(200, 3, 4, 0, 2*PI);

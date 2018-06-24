@@ -13,12 +13,17 @@ class Stepper {
 
     void stepMotor(int rotationDelay);
 
+    //R: many of these can probably be private
     float upperBound;
     float lowerBound;
-    int direction;
+    int direction; //R: does not need to be a class variable, only used in step
     unsigned long step_delay;
     int steps_per_rotation;
     int step_number;
+    //R: radian_per_step and current_motor_radian serve
+    //   no purpose, as the can be calculated from
+    //   steps_per_rotation and step_number, and provide
+    //   less accuracy for calculations
     float radian_per_step;
     float current_motor_radian;
     int stepPin;
