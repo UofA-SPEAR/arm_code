@@ -2,25 +2,26 @@
 
 #ifndef StepperC_h
 #define StepperC_h
+#include <stdint.h>
 
 class Stepper {
 
   public:
-    Stepper(int number_of_steps, int stepPin, int dirPin, float lowerBound, float upperBound);
+    Stepper(int number_of_steps, int stepPin, int dirPin, uint32_t lowerBound, uint32_t upperBound);
     void setSpeed(long RPM);
     void step(int number_of_steps);
-    void rotateToRadian(float target_radian);
+    void rotateToRadian(uint32_t target_radian);
 
     void stepMotor(int rotationDelay);
 
-    float upperBound;
-    float lowerBound;
+    uint32_t upperBound;
+    uint32_t lowerBound;
     int direction;
     unsigned long step_delay;
     int steps_per_rotation;
     int step_number;
-    float radian_per_step;
-    float current_motor_radian;
+    uint32_t radian_per_step;
+    uint32_t current_motor_radian;
     int stepPin;
     int dirPin;
     unsigned long last_step_time;

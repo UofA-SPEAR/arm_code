@@ -8,6 +8,7 @@
 #define ELBOW 2
 #define WRIST 3
 #define FINGER 4
+#define UINT32_MAX 4294967295UL
 
 Arm::Arm(){
   /*
@@ -15,11 +16,11 @@ Arm::Arm(){
   */
 
   //init motor objects
-  this->BaseStepper = new Stepper(200, 3, 4, 0, 2*PI);
-  this->ShoulderStepper = new Stepper(200, 5, 6, 0, 2*PI);
-  this->ElbowStepper = new Stepper(200, 7, 8, 0, 2*PI);
-  this->WristStepper = new Stepper(200, 9, 10, 0, 2*PI);
-  this->FingerStepper = new Stepper(200, 11, 12, 0, 2*PI);
+  this->BaseStepper = new Stepper(200, 3, 4, 0, 2*UINT32_MAX);
+  this->ShoulderStepper = new Stepper(200, 5, 6, 0, 2*UINT32_MAX);
+  this->ElbowStepper = new Stepper(200, 7, 8, 0, 2*UINT32_MAX);
+  this->WristStepper = new Stepper(200, 9, 10, 0, 2*UINT32_MAX);
+  this->FingerStepper = new Stepper(200, 11, 12, 0, 2*UINT32_MAX);
 
   //set motor speeds
   this->BaseStepper->setSpeed(60);
@@ -32,7 +33,7 @@ Arm::Arm(){
 
 }
 
-void Arm::armTo(float *targets){
+void Arm::armTo(uint32_t *targets){
   /*
   params: array of floats of target radians for each motor
   will adjust each motor to target radians

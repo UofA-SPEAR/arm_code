@@ -1,9 +1,11 @@
-#include <Arduino.h>
-#include "StepperC.h"
-#include <string.h>
 #include "SpearArm.h"
+#include "StepperC.h"
 
+#include <Arduino.h>
 #include <math.h>
+#include <string.h>
+#include <stdint.h>
+#define UINT32_MAX 4294967295UL
 
 void setup(){
 	init();
@@ -21,18 +23,13 @@ void motor_test(){
 
 
 	//full angle test
-	for(float base = 0; base < 2*PI; base ++){
+    uint32_t increment = 100000000;
+	for(uint32_t base = increment; base >= increment; base += increment){
 		Serial.println("-------new base-----");
+		Serial.println(base);
+		Serial.println("--------------------");
 		testMotor.rotateToRadian(base); //set to base angle
-
-		//target angles and back
-		for(int target = 1; target < 7; target++){
-			testMotor.rotateToRadian(fmod(base + target, 2*PI));
-			delay(200);
-			testMotor.rotateToRadian(fmod(base,2*PI));
-			delay(200);
-		}
-
+        delay(100);
 	}
 
 	Serial.println("done");
@@ -41,12 +38,27 @@ void motor_test(){
 
 void simple_arm_test(){
 	Arm testArm;
-	float targets[5] = {1,1,1,1,1};
+	uint32_t targets[5] = {3242341,23415,576575,52346,8784};
 	testArm.armTo(targets);
 }
 
 int main(){
 	setup();
+    motor_test();
+    simple_arm_test();
+
+
+	Arm testArm;
+	uint32_t buffer[7];
+
+    for(;;){
+        // need to wait for serial data to be available?
+        Serial.readBytes((char *)buffer, sizeof(uint32_t)*7); // not sure if this works
+
+        Serial.println(buffer[1]);
+
+        testArm.armTo(&buffer[1]);
+    }
 
 	return 0;
 }
