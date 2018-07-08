@@ -1,11 +1,13 @@
 #ifndef Speararm_h
 #define Speararm_h
+#include "StepperC.h"
+#include <stdint.h>
 
 class Arm{
 
 	public:
 		Arm();
-    void armTo(float *targets);
+    void armTo(uint32_t *targets);
 
 	private:
 
@@ -13,7 +15,7 @@ class Arm{
 		Stepper* BaseStepper;
 		Stepper* ShoulderStepper;
 		Stepper* ElbowStepper;
-    Stepper* WristStepper;
+        Stepper* WristStepper;
 		Stepper* FingerStepper;
 
 };

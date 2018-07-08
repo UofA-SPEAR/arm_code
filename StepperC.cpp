@@ -3,9 +3,10 @@
 #include "Arduino.h"
 #include "StepperC.h"
 #include <math.h>
+#define UINT32_MAX 4294967295LL
 
 
-Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, float lowerBound, float upperBound){
+Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, uint32_t lowerBound, uint32_t upperBound){
   /*
   Constructor: 2-pin Stepper motor constructor with A4988 Driver module.
   */
@@ -16,7 +17,7 @@ Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, float lowerBou
   this->steps_per_rotation = steps_per_rotation; //# of steps for 1 rotation
   this->stepPin = stepPin;
   this->dirPin = dirPin;
-  this->radian_per_step = (2 * PI) / steps_per_rotation;
+  this->radian_per_step = UINT32_MAX  / steps_per_rotation;
   this->current_motor_radian = 0; //How do you know position 0?
   this->upperBound = upperBound;
   this->lowerBound = lowerBound;
@@ -28,25 +29,25 @@ Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, float lowerBou
 }
 
 
-void Stepper::rotateToRadian(float target_radian){
+void Stepper::rotateToRadian(uint32_t target_radian){
   /*
   given target radian rotate to that value using a calculated number of steps
   */
   //constrain to motor bounds
   target_radian = constrain(target_radian, lowerBound, upperBound);
-  float diff = (target_radian - this->current_motor_radian);
+  int64_t diff = (target_radian - this->current_motor_radian);
   //calculate minimum difference to target angle
-  if(diff > PI){
-      diff = diff - 2*PI;
+  if(diff > UINT32_MAX/2){
+      diff = diff - UINT32_MAX;
   }
-  if(diff < -1*PI){
-    diff = abs(2*PI - abs(diff));
+  if(diff < -1*UINT32_MAX){
+    diff = abs(UINT32_MAX - abs(diff));
 
   }
   //convert difference radian to number of steps and execute # steps
-  int required_steps = diff * (1/radian_per_step);
+  int required_steps = diff / radian_per_step;
   step(required_steps);
-  this->current_motor_radian = fmod(target_radian, (2*PI));
+  this->current_motor_radian = target_radian;
 }
 
 
