@@ -1,5 +1,6 @@
 #include "SpearArm.h"
 #include "StepperC.h"
+#include "DCMotor.h"
 
 #include <Arduino.h>
 #include <math.h>
@@ -11,7 +12,6 @@ void setup(){
 	init();
 	Serial.begin(9600);
 	Serial.println("Initalized");
-
 }
 
 void motor_test(){
@@ -42,13 +42,26 @@ void simple_arm_test(){
 	testArm.armTo(targets);
 }
 
+void DCMotorTest() {
+    DCMotor testMotor(8, 9, 0, UINT32_MAX);
+
+    Serial.println("-----Beginning DC Motor Test-----");
+    testMotor.powerOn(true, 25);
+    delay(1001);
+    testMotor.powerOff();
+    delay(1001);
+    testMotor.powerOn(false, 25);
+    delay(1001);
+    testMotor.powerOff();
+    Serial.println("-----End DC Motor Test-----");
+}
+
 int main(){
 	setup();
-    motor_test();
-    simple_arm_test();
 
+    DCMotorTest();
 
-	Arm testArm;
+	/* Arm testArm;
 	uint32_t buffer[7];
 
     for(;;){
@@ -58,7 +71,7 @@ int main(){
         Serial.println(buffer[1]);
 
         testArm.armTo(&buffer[1]);
-    }
+    } */
 
 	return 0;
 }
