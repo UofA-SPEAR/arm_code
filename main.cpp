@@ -43,7 +43,7 @@ void simple_arm_test(){
 }
 
 void DCMotorTest() {
-    DCMotor testMotor(8, 9, 0, UINT32_MAX);
+    DCMotor testMotor(8, 9, 6, 7, 374, 0, UINT32_MAX);
 
     Serial.println("-----Beginning DC Motor Test-----");
     testMotor.powerOn(true, 25);
@@ -56,10 +56,22 @@ void DCMotorTest() {
     Serial.println("-----End DC Motor Test-----");
 }
 
+void encoderTest() {
+    DCMotor testMotor(8, 9, 6, 7, 374, 0, UINT32_MAX);
+
+    Serial.println("-----Beginning Encoder Test-----");
+    while (1) {
+        testMotor.powerOn(true, 10);
+        testMotor.updateEncoderPosition();
+        Serial.println(testMotor.encoderStepPosition);
+    }
+}
+
 int main(){
 	setup();
 
     DCMotorTest();
+    encoderTest();
 
 	/* Arm testArm;
 	uint32_t buffer[7];
