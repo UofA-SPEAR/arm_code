@@ -8,10 +8,21 @@
 #include <stdint.h>
 #define UINT32_MAX 4294967295UL
 
+// DCMotors need to be global variables since they need to be accessed by an interrupt function
+volatile DCMotor fingersMotor(8, 9, 2, 4, 374, 0, UINT32_MAX);
+
+// This function will be called by an interrupt
+void updateEncoderPositionFingers() {
+    fingersMotor.updateEncoderPosition();
+}
+
 void setup(){
 	init();
 	Serial.begin(9600);
 	Serial.println("Initalized");
+
+    // attach interupts for DC motors with encoders
+    attachInterrupt(digitalPinToInterrupt(fingersMotor.encoderPinA), updateEncoderPositionFingers, RISING);
 }
 
 void motor_test(){
@@ -43,7 +54,7 @@ void simple_arm_test(){
 }
 
 void DCMotorTest() {
-    DCMotor testMotor(8, 9, 6, 7, 374, 0, UINT32_MAX);
+    DCMotor testMotor(8, 9, 2, 3, 374, 0, UINT32_MAX);
 
     Serial.println("-----Beginning DC Motor Test-----");
     testMotor.powerOn(true, 25);
@@ -57,20 +68,28 @@ void DCMotorTest() {
 }
 
 void encoderTest() {
-    DCMotor testMotor(8, 9, 6, 7, 374, 0, UINT32_MAX);
 
     Serial.println("-----Beginning Encoder Test-----");
-    while (1) {
-        testMotor.powerOn(true, 10);
-        testMotor.updateEncoderPosition();
-        Serial.println(testMotor.encoderStepPosition);
+
+    fingersMotor.powerOn(true, 25);
+    while (abs(fingersMotor.encoderStepPosition) < fingersMotor.pulsesPerRevolution) {
+        Serial.println(fingersMotor.encoderStepPosition);
+        Serial.println("---");
+        Serial.println(digitalRead(fingersMotor.encoderPinB));
     }
+    fingersMotor.powerOff();
+    delay(1000);
+    
+    fingersMotor.powerOn(false, 25);
+    while (fingersMotor.encoderStepPosition != 0) {
+        Serial.println(fingersMotor.encoderStepPosition);
+    }
+    fingersMotor.powerOff();
 }
 
 int main(){
 	setup();
 
-    DCMotorTest();
     encoderTest();
 
 	/* Arm testArm;

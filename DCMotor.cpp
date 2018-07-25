@@ -19,14 +19,23 @@ DCMotor::DCMotor (int dirPin, int pwmPin, int encoderPinA, int encoderPinB, int 
     // for safety, ensure motor does not start moving when instantiated
     this->powerOff();
 
+    // setup encoderPinA to act as an interrupt
+    // this->updateEncoderPosition will be called every time encoderPinA changes
+    // attachInterrupt(digitalPinToInterrupt(this->encoderPinA), this->updateEncoderPosition, CHANGE);
+
+    /*
     // read starting state of encoder
     this->aLastState = digitalRead(this->encoderPinA);
     this->encoderStepPosition = 0;
+    */
 }
 
 void DCMotor::powerOn (bool dir, uint8_t dutyCycle) {
 // powers the motor in specified direction and duty cycle
 // duty cycle should be between 0 (always off) and 255 (always on)
+
+    this->direction = dir;
+
     if (dir) {
         digitalWrite(this->dirPin, HIGH);
         analogWrite(this->pwmPin, dutyCycle);
@@ -43,21 +52,14 @@ void DCMotor::powerOff () {
 }
 
 void DCMotor::updateEncoderPosition () {
-    this->aState = digitalRead(this->encoderPinA);
-    
-    // check if state of signal A has changed
-    if (this->aState != this->aLastState) {
+// this function should be called by interrupt every time encoderPinA CHANGES    
 
-        // compare with signal B to decide which direction the motor turned
-        if (digitalRead(this->encoderPinB) != this->aState) {
-            this->encoderStepPosition++;
-        } else {
-            this->encoderStepPosition--;
-        }
-
+    if (this->direction) {
+        this->encoderStepPosition++;
+    } else {
+        this->encoderStepPosition--;
     }
     
-    this->aLastState = this->aState;
 }
 
 void DCMotor::rotateToRadian (uint32_t target_radian) {
