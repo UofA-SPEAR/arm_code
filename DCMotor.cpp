@@ -79,20 +79,12 @@ void DCMotor::rotateToRadian (uint32_t target_radian) {
     // calculate the most efficient path to target angle
     int encoderStepDiff = (targetEncoderStepPosition - this->encoderStepPosition);
 
-    //Serial.println(encoderStepDiff);
-
     if(encoderStepDiff > this->pulsesPerRevolution/2){
         encoderStepDiff = encoderStepDiff - this->pulsesPerRevolution;
     }
     if(encoderStepDiff < -1*this->pulsesPerRevolution/2){
-        // RYAN: this block is executing when it shouldn't
-        Serial.println("true");
-        Serial.println(-1*this->pulsesPerRevolution/2);
-        Serial.println( -1/2*this->pulsesPerRevolution);
         encoderStepDiff = this->pulsesPerRevolution + encoderStepDiff;
     }
-
-    //Serial.println(encoderStepDiff);
 
     // power the motor until it reaches the target angle
     // choose the direction based on whether encoderStepDiff is positive or negative
