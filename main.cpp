@@ -12,17 +12,18 @@
 volatile DCMotor fingersMotor(8, 9, 2, 4, 374, 0, UINT32_MAX);
 
 // This function will be called by an interrupt
-void updateEncoderPositionFingers() {
-    fingersMotor.updateEncoderPosition();
+void updatePositionFingers() {
+    fingersMotor.updatePosition();
 }
 
 void setup(){
 	init();
 	Serial.begin(9600);
 	Serial.println("Initalized");
+    delay(1000);
 
     // attach interupts for DC motors with encoders
-    attachInterrupt(digitalPinToInterrupt(fingersMotor.encoderPinA), updateEncoderPositionFingers, RISING);
+    attachInterrupt(digitalPinToInterrupt(fingersMotor.encoderPinA), updatePositionFingers, RISING);
 }
 
 void motor_test(){
@@ -53,7 +54,7 @@ void simple_arm_test(){
 	testArm.armTo(targets);
 }
 
-void DCMotorTest() {
+void DCMotorSimpleTest() {
     DCMotor testMotor(8, 9, 2, 3, 374, 0, UINT32_MAX);
 
     Serial.println("-----Beginning DC Motor Test-----");
@@ -69,11 +70,11 @@ void DCMotorTest() {
 
 void encoderTest() {
 
-    Serial.println("-----Beginning Encoder Test-----");
+    Serial.println("Beginning Encoder Test");
 
     fingersMotor.powerOn(true, 25);
     while (abs(fingersMotor.encoderStepPosition) < fingersMotor.pulsesPerRevolution) {
-        Serial.println(fingersMotor.encoderStepPosition);
+        Serial.println(fingersMotor.current_motor_radian);
         Serial.println("---");
         Serial.println(digitalRead(fingersMotor.encoderPinB));
     }
@@ -87,10 +88,50 @@ void encoderTest() {
     fingersMotor.powerOff();
 }
 
+void DCAngleTest () {
+//full angle test for DCMotor
+
+    int basesCount = 4;
+    uint32_t base = UINT32_MAX / basesCount;
+    int targetsCount = 8;
+    uint32_t target = UINT32_MAX / targetsCount;
+	for(int i = 0; i < basesCount; i++){
+        base = base + i * (UINT32_MAX / basesCount);
+		Serial.println("-------new base-----");
+		Serial.println(base);
+		Serial.println("--------------------");
+		fingersMotor.rotateToRadian(base); //set to base angle
+        delay(1000);
+        
+        //target angles and back
+        for(int j = 0; j < targetsCount; j++){
+            target = target + j * (UINT32_MAX / targetsCount);
+            Serial.println((uint32_t)(base+target));
+            fingersMotor.rotateToRadian(base + target);
+            delay(500);
+            fingersMotor.rotateToRadian(base);
+            delay(500);
+        }
+	}
+
+	Serial.println("done");
+}
+
 int main(){
 	setup();
 
-    encoderTest();
+    //DCAngleTest();
+    fingersMotor.rotateToRadian(4000000000);
+    delay(100);
+    //fingersMotor.rotateToRadian(4294967273);
+    fingersMotor.rotateToRadian(UINT32_MAX);
+    Serial.println("done");
+
+    //fingersMotor.rotateToRadian(UINT32_MAX / 4);
+    //delay(1000);
+    //fingersMotor.rotateToRadian(UINT32_MAX / 2);
+    //delay(1000);
+    //fingersMotor.rotateToRadian(UINT32_MAX / 4);
 
 	/* Arm testArm;
 	uint32_t buffer[7];
