@@ -1,5 +1,7 @@
 // Base class for stepper and DC motors
 
+#ifndef Motor_h
+#define Motor_h
 #include <stdint.h>
 
 class Motor {
@@ -13,3 +15,4 @@ class Motor {
         uint32_t current_motor_radian;
 
 };
+#endif

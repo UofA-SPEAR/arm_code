@@ -121,9 +121,11 @@ void DCAngleTest () {
 int main(){
 	setup();
 
-    fingersMotor.rotateToRadian(UINT32_MAX);
-    fingersMotor.rotateToRadian(3 * (UINT32_MAX / 4));
-    fingersMotor.rotateToRadian(0);
+    uint32_t potPos = 0;
+    while (1) {
+        potPos = analogRead(A1);
+        Serial.println(potPos);
+    }
 
 	/* Arm testArm;
 	uint32_t buffer[7];
