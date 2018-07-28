@@ -9,7 +9,7 @@
 #define UINT32_MAX 4294967295UL
 
 // DCMotors need to be global variables since they need to be accessed by an interrupt function
-volatile DCMotor fingersMotor(8, 9, 2, 4, 374, 0, UINT32_MAX);
+volatile DCMotor fingersMotor(8, 9, 2, 4, 374, 0, 3 * (UINT32_MAX/4));
 
 // This function will be called by an interrupt
 void updatePositionFingers() {
@@ -90,6 +90,7 @@ void encoderTest() {
 
 void DCAngleTest () {
 //full angle test for DCMotor
+//there are some integer overflow errors here
 
     int basesCount = 4;
     uint32_t base = UINT32_MAX / basesCount;
@@ -120,18 +121,9 @@ void DCAngleTest () {
 int main(){
 	setup();
 
-    //DCAngleTest();
-    fingersMotor.rotateToRadian(4000000000);
-    delay(100);
-    //fingersMotor.rotateToRadian(4294967273);
     fingersMotor.rotateToRadian(UINT32_MAX);
-    Serial.println("done");
-
-    //fingersMotor.rotateToRadian(UINT32_MAX / 4);
-    //delay(1000);
-    //fingersMotor.rotateToRadian(UINT32_MAX / 2);
-    //delay(1000);
-    //fingersMotor.rotateToRadian(UINT32_MAX / 4);
+    fingersMotor.rotateToRadian(3 * (UINT32_MAX / 4));
+    fingersMotor.rotateToRadian(0);
 
 	/* Arm testArm;
 	uint32_t buffer[7];
