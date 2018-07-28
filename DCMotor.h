@@ -18,11 +18,11 @@ class DCMotor: public Motor {
         bool direction;
         int encoderStepPosition;
 
-        DCMotor ();
+        DCMotor () {}
         DCMotor (int dirPin, int pwmPin, int encoderPinA, int encoderPinB, int pulsesPerRevolution, uint32_t lowerBound, uint32_t upperBound);
         void powerOn (bool dir, uint8_t dutyCycle);
         void powerOff ();
         void updatePosition ();
-        void rotateToRadian (uint32_t target_angle);
+        virtual void rotateToRadian (uint32_t target_angle);
 };
 #endif

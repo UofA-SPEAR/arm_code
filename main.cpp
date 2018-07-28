@@ -1,6 +1,8 @@
 #include "SpearArm.h"
 #include "StepperC.h"
+#include "Motor.h"
 #include "DCMotor.h"
+#include "DCPotMotor.h"
 
 #include <Arduino.h>
 #include <math.h>
@@ -9,7 +11,7 @@
 #define UINT32_MAX 4294967295UL
 
 // DCMotors need to be global variables since they need to be accessed by an interrupt function
-volatile DCMotor fingersMotor(8, 9, 2, 4, 374, 0, 3 * (UINT32_MAX/4));
+DCMotor fingersMotor(8, 9, 2, 4, 374, 0, 3 * (UINT32_MAX/4));
 
 // This function will be called by an interrupt
 void updatePositionFingers() {
@@ -121,11 +123,9 @@ void DCAngleTest () {
 int main(){
 	setup();
 
-    uint32_t potPos = 0;
-    while (1) {
-        potPos = analogRead(A1);
-        Serial.println(potPos);
-    }
+    DCPotMotor testPotMotor(8, 9, A1, 0, UINT32_MAX);
+    testPotMotor.rotateToRadian(UINT32_MAX / 2);
+    Serial.println("done");
 
 	/* Arm testArm;
 	uint32_t buffer[7];
