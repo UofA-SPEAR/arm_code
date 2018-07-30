@@ -29,7 +29,7 @@ void setup(){
 void torqueTest() {
     for (int dutyCycle = 0; dutyCycle <= 255; dutyCycle++) {
         Serial.println(dutyCycle);
-        shoulderMotor.powerOn(true, dutyCycle);
+        shoulderMotor.powerOn(false, dutyCycle);
         delay(1000);
     }
 }
@@ -37,6 +37,7 @@ void torqueTest() {
 int main(){
 	setup();
 
+    //shoulderMotor.powerOn(false, 25);
     torqueTest();
 
     return 0;
