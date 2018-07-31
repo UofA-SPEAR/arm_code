@@ -51,11 +51,12 @@ void DCMotor::calibrate () {
 // moves motor in false direction until interrupted by limit switch
 // ENSURE YOU HAVE SET UP THE INTERRUPT BEFORE CALLING THIS FUNCTION
 
-    this->encoderStepPosition = this->pulsesPerRevolution;
+    if (digitalRead(this->limitSwitchPin) == LOW) {
+        this->encoderStepPosition = 0;
+        return;
+    }
 
-    //if (digitalRead(this->limitSwitchPin == LOW)) {
-        //return;
-    //}
+    this->encoderStepPosition = this->pulsesPerRevolution;
 
     while (this->encoderStepPosition != 0) {
         this->powerOn(false, 25);
