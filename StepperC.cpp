@@ -131,7 +131,7 @@ void Stepper::calibrate() {
   // the interrupt function should set current_motor_radian to lowerBound when the limit switch is triggered
 
   // check to see if limit switch is already triggered
-  if (digitalRead(this->limitSwitchPin == LOW)) {
+  if (digitalRead(this->limitSwitchPin) == LOW) {
     this->current_motor_radian = 0;
     return;
   }
