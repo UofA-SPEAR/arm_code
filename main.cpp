@@ -11,21 +11,33 @@
 #define UINT32_MAX 4294967295UL
 
 // DCMotors need to be global variables since they need to be accessed by an interrupt function
-DCMotor fingersMotor(8, 9, 2, 4, 374, 0, 3 * (UINT32_MAX/4));
+DCMotor fingersMotor(8, 9, 3, 2, 4, 374, 0, 3 * (UINT32_MAX/4));
 
 // This function will be called by an interrupt
 void updatePositionFingers() {
     fingersMotor.updatePosition();
 }
+void zeroFingers() {
+// set encoderStepPosition to zero when the end stop is hit
+// this function should be called from an interrupt
+    digitalWrite(13, HIGH);
+    delay(1000);
+    digitalWrite(13, LOW);
+
+    fingersMotor.powerOff();
+    fingersMotor.encoderStepPosition = 0;
+}
 
 void setup(){
 	init();
 	Serial.begin(9600);
+    pinMode(13, OUTPUT);
 	Serial.println("Initalized");
     delay(1000);
 
     // attach interupts for DC motors with encoders
     attachInterrupt(digitalPinToInterrupt(fingersMotor.encoderPinA), updatePositionFingers, RISING);
+    attachInterrupt(digitalPinToInterrupt(fingersMotor.limitSwitchPin), zeroFingers, FALLING);
 }
 
 void motor_test(){
@@ -57,7 +69,7 @@ void simple_arm_test(){
 }
 
 void DCMotorSimpleTest() {
-    DCMotor testMotor(8, 9, 2, 3, 374, 0, UINT32_MAX);
+    DCMotor testMotor(8, 9, 3, 2, 4, 374, 0, UINT32_MAX);
 
     Serial.println("-----Beginning DC Motor Test-----");
     testMotor.powerOn(true, 25);
@@ -122,11 +134,15 @@ void DCAngleTest () {
 
 int main(){
 	setup();
+    delay(1000);
 
-    DCPotMotor testPotMotor(8, 9, A1, 0, UINT32_MAX);
-    testPotMotor.rotateToRadian(UINT32_MAX / 2);
-    Serial.println("done");
+    fingersMotor.calibrate();
+    delay(10000);
+    fingersMotor.rotateToRadian(UINT32_MAX / 2);
 
+    //while (1) {
+        //Serial.println(fingersMotor.encoderStepPosition);
+    //}
 	/* Arm testArm;
 	uint32_t buffer[7];
 

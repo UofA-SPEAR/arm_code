@@ -2,9 +2,10 @@
 
 #include "Arduino.h"
 
-DCMotor::DCMotor (int dirPin, int pwmPin, int encoderPinA, int encoderPinB, int pulsesPerRevolution, uint32_t lowerBound, uint32_t upperBound) {
+DCMotor::DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, int encoderPinB, int pulsesPerRevolution, uint32_t lowerBound, uint32_t upperBound) {
     this->dirPin = dirPin;
     this->pwmPin = pwmPin;
+    this->limitSwitchPin = limitSwitchPin;
     this->encoderPinA = encoderPinA;
     this->encoderPinB = encoderPinB;
     this->pulsesPerRevolution = pulsesPerRevolution;
@@ -13,6 +14,7 @@ DCMotor::DCMotor (int dirPin, int pwmPin, int encoderPinA, int encoderPinB, int 
 
     pinMode(this->dirPin, OUTPUT);
     pinMode(this->pwmPin, OUTPUT);
+    pinMode(this->limitSwitchPin, INPUT_PULLUP);
     pinMode(this->encoderPinA, INPUT);
     pinMode(this->encoderPinB, INPUT);
     
@@ -43,6 +45,23 @@ void DCMotor::powerOn (bool dir, uint8_t dutyCycle) {
 void DCMotor::powerOff () {
 // stops power being sent to the motor (stops the motor)
     digitalWrite(this->pwmPin, LOW);
+}
+
+void DCMotor::calibrate () {
+// moves motor in false direction until interrupted by end stop
+// ENSURE YOU HAVE SET UP THE INTERRUPT BEFORE CALLING THIS FUNCTION
+
+    this->encoderStepPosition = this->pulsesPerRevolution;
+
+    //if (digitalRead(this->limitSwitchPin == LOW)) {
+        //return;
+    //}
+
+    while (this->encoderStepPosition != 0) {
+        this->powerOn(false, 25);
+    }
+    this->powerOff();
+    this->encoderStepPosition = 0;
 }
 
 void DCMotor::updatePosition () {
