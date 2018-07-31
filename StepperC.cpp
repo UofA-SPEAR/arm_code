@@ -6,7 +6,7 @@
 #define UINT32_MAX 4294967295LL
 
 
-Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, uint32_t lowerBound, uint32_t upperBound){
+Stepper::Stepper(int number_of_steps, int stepPin, int dirPin, int limitSwitchPin, long RPM, uint32_t lowerBound, uint32_t upperBound){
   /*
   Constructor: 2-pin Stepper motor constructor with A4988 Driver module.
   */
@@ -17,6 +17,7 @@ Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, uint32_t lower
   this->steps_per_rotation = steps_per_rotation; //# of steps for 1 rotation
   this->stepPin = stepPin;
   this->dirPin = dirPin;
+  this->limitSwitchPin = limitSwitchPin;
   this->radian_per_step = UINT32_MAX  / steps_per_rotation;
   this->current_motor_radian = 0; //How do you know position 0?
   this->upperBound = upperBound;
@@ -25,7 +26,11 @@ Stepper::Stepper(int steps_per_rotation, int stepPin, int dirPin, uint32_t lower
   //setup the pins on the microcontroller:
   pinMode(this->stepPin, OUTPUT);
   pinMode(this->dirPin, OUTPUT);
+  pinMode(this->limitSwitchPin, INPUT_PULLUP);
   digitalWrite(this->dirPin, this->direction);
+
+  //set speed in RPM
+  this->setSpeed(RPM);
 }
 
 
@@ -118,4 +123,22 @@ void Stepper::stepMotor(int rotationDelay){
   delayMicroseconds(rotationDelay);
   digitalWrite(stepPin,LOW);
   delayMicroseconds(rotationDelay);
+}
+
+void Stepper::calibrate() {
+  // moves motor in false direction until interrupted by limit switch
+  // this function should be called in an interrupt
+  // the interrupt function should set current_motor_radian to lowerBound when the limit switch is triggered
+
+  // check to see if limit switch is already triggered
+  if (digitalRead(this->limitSwitchPin == LOW)) {
+    this->current_motor_radian = 0;
+    return;
+  }
+
+  this->current_motor_radian = this->upperBound;
+  while (this->current_motor_radian > this->lowerBound) {
+    this->step(-1);
+  }
+  this->current_motor_radian = lowerBound;
 }

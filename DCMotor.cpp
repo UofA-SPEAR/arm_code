@@ -48,7 +48,7 @@ void DCMotor::powerOff () {
 }
 
 void DCMotor::calibrate () {
-// moves motor in false direction until interrupted by end stop
+// moves motor in false direction until interrupted by limit switch
 // ENSURE YOU HAVE SET UP THE INTERRUPT BEFORE CALLING THIS FUNCTION
 
     this->encoderStepPosition = this->pulsesPerRevolution;

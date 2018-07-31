@@ -38,7 +38,7 @@ void setup(){
 
 void motor_test(){
 	Serial.println("init stepper");
-	Stepper testMotor(200, 3, 4, 0, 2*PI);
+	Stepper testMotor(200, 3, 4, 5, 60, 0, UINT32_MAX);
 
 	Serial.println("setting rotation speed");
 	testMotor.setSpeed(120);
@@ -56,12 +56,6 @@ void motor_test(){
 
 	Serial.println("done");
 
-}
-
-void simple_arm_test(){
-	Arm testArm;
-	uint32_t targets[5] = {3242341,23415,576575,52346,8784};
-	testArm.armTo(targets);
 }
 
 void DCMotorSimpleTest() {

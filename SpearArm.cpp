@@ -6,30 +6,20 @@
 #define BASE 0
 #define SHOULDER 1
 #define ELBOW 2
-#define WRIST 3
-#define FINGER 4
+#define WRIST_PITCH 3
+#define WRIST_ROLL 4
+#define FINGERS 5
 #define UINT32_MAX 4294967295UL
 
-Arm::Arm(){
-  /*
-  Constructor
-  */
-
-  //init motor objects
-  this->BaseStepper = new Stepper(200, 3, 4, 0, 2*UINT32_MAX);
-  this->ShoulderStepper = new Stepper(200, 5, 6, 0, 2*UINT32_MAX);
-  this->ElbowStepper = new Stepper(200, 7, 8, 0, 2*UINT32_MAX);
-  this->WristStepper = new Stepper(200, 9, 10, 0, 2*UINT32_MAX);
-  this->FingerStepper = new Stepper(200, 11, 12, 0, 2*UINT32_MAX);
+Arm::Arm(Motor** motors){
+  this->motors = motors;
 
   //set motor speeds
-  this->BaseStepper->setSpeed(60);
-  this->ShoulderStepper->setSpeed(60);
-  this->ElbowStepper->setSpeed(60);
-  this->WristStepper->setSpeed(60);
-  this->FingerStepper->setSpeed(60);
-
-  //
+  //this->BaseStepper->setSpeed(60);
+  //this->ShoulderStepper->setSpeed(60);
+  //this->ElbowStepper->setSpeed(60);
+  //this->WristStepper->setSpeed(60);
+  //this->FingerStepper->setSpeed(60);
 
 }
 
@@ -39,9 +29,10 @@ void Arm::armTo(uint32_t *targets){
   will adjust each motor to target radians
   */
 
-  this->BaseStepper->rotateToRadian(targets[BASE]);
-  this->ShoulderStepper->rotateToRadian(targets[SHOULDER]);
-  this->ElbowStepper->rotateToRadian(targets[ELBOW]);
-  this->WristStepper->rotateToRadian(targets[WRIST]);
-  this->FingerStepper->rotateToRadian(targets[FINGER]);
+  this->motors[BASE]        ->rotateToRadian(targets[BASE]);
+  this->motors[SHOULDER]    ->rotateToRadian(targets[SHOULDER]);
+  this->motors[ELBOW]       ->rotateToRadian(targets[ELBOW]);
+  this->motors[WRIST_PITCH] ->rotateToRadian(targets[WRIST_PITCH]);
+  this->motors[WRIST_ROLL]  ->rotateToRadian(targets[WRIST_ROLL]);
+  this->motors[FINGERS]     ->rotateToRadian(targets[FINGERS]);
 }

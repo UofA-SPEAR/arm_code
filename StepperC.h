@@ -7,12 +7,12 @@
 class Stepper {
 
   public:
-    Stepper(int number_of_steps, int stepPin, int dirPin, uint32_t lowerBound, uint32_t upperBound);
+    Stepper(int number_of_steps, int stepPin, int dirPin, int limitSwitchPin, long RPM, uint32_t lowerBound, uint32_t upperBound);
     void setSpeed(long RPM);
     void step(int number_of_steps);
     void rotateToRadian(uint32_t target_radian);
-
     void stepMotor(int rotationDelay);
+    void calibrate();
 
     uint32_t upperBound;
     uint32_t lowerBound;
@@ -24,6 +24,7 @@ class Stepper {
     uint32_t current_motor_radian;
     int stepPin;
     int dirPin;
+    int limitSwitchPin;
     unsigned long last_step_time;
 
 };
