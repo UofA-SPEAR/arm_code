@@ -12,6 +12,7 @@
 #define UINT32_MAX 4294967295UL
 
 Arm::Arm(Motor** motors){
+// motors should be a pointer to an array of six pointers to Motor objects
   this->motors = motors;
 
   //set motor speeds

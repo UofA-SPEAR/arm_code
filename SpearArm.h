@@ -8,7 +8,9 @@
 
 class Arm{
     
-    // motors should be a pointer to an array of 6 motor pointers
+    // motors should be a pointer to an array of 6 pointers to Motor objects
+    // This is done because the DCMotor, DCPotMotor, and Stepper classes are pointer-compatible
+    //   therefore we can write the Arm class without caring what specific type of motor each one is.
     Motor** motors;
 
     public:
