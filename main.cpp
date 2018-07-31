@@ -20,10 +20,6 @@ void updatePositionFingers() {
 void zeroFingers() {
 // set encoderStepPosition to zero when the end stop is hit
 // this function should be called from an interrupt
-    digitalWrite(13, HIGH);
-    delay(1000);
-    digitalWrite(13, LOW);
-
     fingersMotor.powerOff();
     fingersMotor.encoderStepPosition = 0;
 }
@@ -137,7 +133,7 @@ int main(){
     delay(1000);
 
     fingersMotor.calibrate();
-    delay(10000);
+    delay(1000);
     fingersMotor.rotateToRadian(UINT32_MAX / 2);
 
     //while (1) {
