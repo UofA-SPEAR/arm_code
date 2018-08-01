@@ -10,8 +10,13 @@
 #include <stdint.h>
 #define UINT32_MAX 4294967295UL
 
-// DCMotors need to be global variables since they need to be accessed by an interrupt function
-DCMotor fingersMotor(8, 9, 3, 2, 4, 374, 25, 0, 3 * (UINT32_MAX/4));
+// Motors need to be global variables since they need to be modified by interrupt functions
+Stepper baseMotor(200, 22, 23, 18, 60, 0, UINT32_MAX-1);
+DCPotMotor shoulderMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
+Stepper elbowMotor(200, 4, 5, 2, 60, 0, UINT32_MAX-1);
+Stepper wristPitchMotor(200, 6, 7, 3, 60, 0, UINT32_MAX-1);
+DCMotor wristRollMotor(10, 11, 20, 19, 32, 374, 25, 0, UINT32_MAX);
+DCMotor fingersMotor(13, 12, 30, 21, 31, 374, 25, 0, UINT32_MAX-1);
 
 // This function will be called by an interrupt
 void updatePositionFingers() {
