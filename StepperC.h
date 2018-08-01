@@ -2,9 +2,12 @@
 
 #ifndef StepperC_h
 #define StepperC_h
+
+#include "Motor.h"
+
 #include <stdint.h>
 
-class Stepper {
+class Stepper: public Motor {
 
   public:
     Stepper(int number_of_steps, int stepPin, int dirPin, int limitSwitchPin, long RPM, uint32_t lowerBound, uint32_t upperBound);
@@ -14,14 +17,10 @@ class Stepper {
     void stepMotor(int rotationDelay);
     void calibrate();
 
-    uint32_t upperBound;
-    uint32_t lowerBound;
-    int direction;
     unsigned long step_delay;
     int steps_per_rotation;
     int step_number;
     uint32_t radian_per_step;
-    uint32_t current_motor_radian;
     int stepPin;
     int dirPin;
     int limitSwitchPin;
