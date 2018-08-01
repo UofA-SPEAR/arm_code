@@ -11,7 +11,7 @@
 #define UINT32_MAX 4294967295UL
 
 // DCMotors need to be global variables since they need to be accessed by an interrupt function
-DCMotor fingersMotor(8, 9, 3, 2, 4, 374, 0, 3 * (UINT32_MAX/4));
+DCMotor fingersMotor(8, 9, 3, 2, 4, 374, 25, 0, 3 * (UINT32_MAX/4));
 
 // This function will be called by an interrupt
 void updatePositionFingers() {
@@ -59,7 +59,7 @@ void motor_test(){
 }
 
 void DCMotorSimpleTest() {
-    DCMotor testMotor(8, 9, 3, 2, 4, 374, 0, UINT32_MAX);
+    DCMotor testMotor(8, 9, 3, 2, 4, 374, 25, 0, UINT32_MAX);
 
     Serial.println("-----Beginning DC Motor Test-----");
     testMotor.powerOn(true, 25);

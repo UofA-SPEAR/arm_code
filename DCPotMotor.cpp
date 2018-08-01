@@ -45,7 +45,7 @@ void DCPotMotor::rotateToRadian (uint32_t target_radian) {
     }
 
     // move the motor in the necessary direction until it reaches targetPotPos
-    this->powerOn(dir, 25);
+    this->powerOn(dir, this->dutyCycle);
     while (this->potPosition != targetPotPosition) {
         this->updatePosition();
     }

@@ -2,13 +2,14 @@
 
 #include "Arduino.h"
 
-DCMotor::DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, int encoderPinB, int pulsesPerRevolution, uint32_t lowerBound, uint32_t upperBound) {
+DCMotor::DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, int encoderPinB, int pulsesPerRevolution, uint8_t dutyCycle, uint32_t lowerBound, uint32_t upperBound) {
     this->dirPin = dirPin;
     this->pwmPin = pwmPin;
     this->limitSwitchPin = limitSwitchPin;
     this->encoderPinA = encoderPinA;
     this->encoderPinB = encoderPinB;
     this->pulsesPerRevolution = pulsesPerRevolution;
+    this->dutyCycle = dutyCycle;
     this->lowerBound = lowerBound;
     this->upperBound = upperBound;
 
@@ -59,7 +60,7 @@ void DCMotor::calibrate () {
     this->encoderStepPosition = this->pulsesPerRevolution;
 
     while (this->encoderStepPosition != 0) {
-        this->powerOn(false, 25);
+        this->powerOn(false, this->dutyCycle);
     }
     this->powerOff();
     this->encoderStepPosition = 0;
@@ -106,7 +107,7 @@ void DCMotor::rotateToRadian (uint32_t target_radian) {
         }
 
         while (this->encoderStepPosition != targetEncoderStepPosition) {
-            this->powerOn(dir, 25);
+            this->powerOn(dir, this->dutyCycle);
         }
         this->powerOff();
  
@@ -134,11 +135,11 @@ void DCMotor::rotateToRadian (uint32_t target_radian) {
     if (encoderStepDiff != 0) { // this fixes bug where motor is at zero degrees and given target angle 360 degrees
         if (encoderStepDiff>0) {
             while (this->encoderStepPosition != targetEncoderStepPosition) {
-                this->powerOn(true, 25);
+                this->powerOn(true, this->dutyCycle);
             }
         } else {
             while (this->encoderStepPosition != targetEncoderStepPosition) {
-                this->powerOn(false, 25);
+                this->powerOn(false, this->dutyCycle);
             }
         }
     }

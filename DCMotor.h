@@ -15,12 +15,13 @@ class DCMotor: public Motor {
         int encoderPinA;
         int encoderPinB;
         int pulsesPerRevolution;
+        uint8_t dutyCycle;
 
         bool direction;
         int encoderStepPosition;
 
         DCMotor () {}
-        DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, int encoderPinB, int pulsesPerRevolution, uint32_t lowerBound, uint32_t upperBound);
+        DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, int encoderPinB, int pulsesPerRevolution, uint8_t dutyCycle, uint32_t lowerBound, uint32_t upperBound);
         void powerOn (bool dir, uint8_t dutyCycle);
         void powerOff ();
         void calibrate ();
