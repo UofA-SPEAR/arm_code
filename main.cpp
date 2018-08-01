@@ -128,7 +128,9 @@ int main(){
 
     fingersMotor.calibrate();
     delay(1000);
-    fingersMotor.rotateToRadian(UINT32_MAX / 2);
+    fingersMotor.rotateToRadian(2 * (UINT32_MAX / 3));
+    fingersMotor.rotateToRadian(0);
+    fingersMotor.rotateToRadian(UINT32_MAX / 3);
 
     //while (1) {
         //Serial.println(fingersMotor.encoderStepPosition);
