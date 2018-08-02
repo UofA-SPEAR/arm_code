@@ -19,7 +19,7 @@ Stepper::Stepper(int number_of_steps, int stepPin, int dirPin, int limitSwitchPi
   this->dirPin = dirPin;
   this->limitSwitchPin = limitSwitchPin;
   this->radian_per_step = UINT32_MAX  / steps_per_rotation;
-  this->current_motor_radian = 0; //How do you know position 0?
+  this->current_motor_radian = 0;
   this->upperBound = upperBound;
   this->lowerBound = lowerBound;
 
@@ -45,9 +45,8 @@ void Stepper::rotateToRadian(uint32_t target_radian){
   if(diff > UINT32_MAX/2){
       diff = diff - UINT32_MAX;
   }
-  if(diff < -1*UINT32_MAX){
+  if(diff < -1*(UINT32_MAX/2)){
     diff = abs(UINT32_MAX - abs(diff));
-
   }
   //convert difference radian to number of steps and execute # steps
   int required_steps = diff / radian_per_step;
