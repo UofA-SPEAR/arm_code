@@ -25,20 +25,23 @@ DCMotor::DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, i
     this->encoderStepPosition = 0;
     this->current_motor_radian = 0;
 
+    // default forwardDirection to HIGH
+    this->setForwardDirection(true);
 }
 
 void DCMotor::powerOn (bool dir, uint8_t dutyCycle) {
 // powers the motor in specified direction and duty cycle
+// if dir is true, motor will move in forwardDirection
 // duty cycle should be between 0 (always off) and 255 (always on)
 
     this->direction = dir;
 
     if (dir) {
-        digitalWrite(this->dirPin, HIGH);
+        digitalWrite(this->dirPin, this->forwardDirection);
         analogWrite(this->pwmPin, dutyCycle);
     }
     else {
-        digitalWrite(this->dirPin, LOW);
+        digitalWrite(this->dirPin, this->reverseDirection);
         analogWrite(this->pwmPin, dutyCycle);
     }
 }

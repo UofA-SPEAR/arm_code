@@ -14,7 +14,10 @@ DCPotMotor::DCPotMotor (int dirPin, int pwmPin, int potPin, uint32_t lowerBoundP
     pinMode(this->dirPin, OUTPUT);
     pinMode(this->pwmPin, OUTPUT);
 
-    this->potPosition = analogRead(this-potPin);
+    this->potPosition = analogRead(this->potPin);
+
+    // set forwardDirection to HIGH by default
+    this->setForwardDirection(true);
 }
 
 void DCPotMotor::updatePosition () {

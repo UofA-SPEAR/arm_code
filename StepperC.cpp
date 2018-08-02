@@ -31,6 +31,9 @@ Stepper::Stepper(int number_of_steps, int stepPin, int dirPin, int limitSwitchPi
 
   //set speed in RPM
   this->setSpeed(RPM);
+
+  // set forwardDirection to HIGH by default
+  this->setForwardDirection(true);
 }
 
 
@@ -68,6 +71,12 @@ void Stepper::step(int steps_to_move){
    * Moves the motor [steps_to_move] steps.  If the number is negative,
    * the motor moves in the reverse direction.
    */
+
+  // reverse the direction if this->forwardDirection is set to LOW
+  if (this->forwardDirection == LOW) {
+    steps_to_move = -1 * steps_to_move;
+  }
+
   int steps_left = abs(steps_to_move);  // how many steps to take
 
   // determine direction based on whether steps_to_mode is + or -:
