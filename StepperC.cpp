@@ -44,13 +44,18 @@ void Stepper::rotateToRadian(uint32_t target_radian){
   //constrain to motor bounds
   target_radian = constrain(target_radian, lowerBound, upperBound);
   int64_t diff = (target_radian - this->current_motor_radian);
+
   //calculate minimum difference to target angle
-  if(diff > UINT32_MAX/2){
+  //only do this optimization if the motor can rotate the full 360 degrees
+  if(this->lowerBound == 0 && this->upperBound == UINT32_MAX) {
+    if(diff > UINT32_MAX/2){
       diff = diff - UINT32_MAX;
+    }
+    if(diff < -1*(UINT32_MAX/2)){
+      diff = abs(UINT32_MAX - abs(diff));
+    }
   }
-  if(diff < -1*(UINT32_MAX/2)){
-    diff = abs(UINT32_MAX - abs(diff));
-  }
+
   //convert difference radian to number of steps and execute # steps
   int required_steps = diff / radian_per_step;
   step(required_steps);
