@@ -1,5 +1,6 @@
 #include "SpearArm.h"
 #include "StepperC.h"
+#include "StepperAmis.h"
 #include "Motor.h"
 #include "DCMotor.h"
 #include "DCPotMotor.h"
@@ -15,6 +16,7 @@ Stepper baseMotor(200, 22, 23, 18, 60, 0, UINT32_MAX-1);
 DCPotMotor shoulderMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
 Stepper elbowMotor(200, 4, 5, 2, 60, 0, UINT32_MAX-1);
 Stepper wristPitchMotor(200, 6, 7, 3, 60, 0, UINT32_MAX-1);
+StepperAmis wristPitchMotorAmis(&wristPitchMotor, 5);
 DCMotor wristRollMotor(10, 11, 20, 19, 32, 374, 25, 0, UINT32_MAX);
 DCMotor fingersMotor(13, 12, 30, 21, 31, 374, 25, 0, UINT32_MAX-1);
 
@@ -31,6 +33,7 @@ void zeroFingers() {
 
 void setup(){
 	init();
+    SPI.begin();
 	Serial.begin(9600);
     pinMode(13, OUTPUT);
 	Serial.println("Initalized");
@@ -131,11 +134,7 @@ int main(){
 	setup();
     delay(1000);
 
-    fingersMotor.calibrate();
-    delay(1000);
-    fingersMotor.rotateToRadian(2 * (UINT32_MAX / 3));
-    fingersMotor.rotateToRadian(0);
-    fingersMotor.rotateToRadian(UINT32_MAX / 3);
+    wristPitchMotorAmis.p_stepper->step(200);
 
     //while (1) {
         //Serial.println(fingersMotor.encoderStepPosition);

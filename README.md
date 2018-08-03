@@ -6,6 +6,9 @@ Basics
 Stepper motors are controlled by A4988 Driver.
 StepperC (stepper custom) is source code from the original Arduino Stepper library. StepperC is to be re-written with the assumption that stepper motors are being controlled by the A4988 Driver. The stepper class will have functions to allow for radian control of motors.
 
+Dependencies
+------------
+- amis-30543-arduino library (https://github.com/pololu/amis-30543-arduino)
 
 motor class
 -----------

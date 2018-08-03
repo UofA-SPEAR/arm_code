@@ -27,9 +27,9 @@ BOARD_SUB = atmega2560
 endif
 
 # Arduino Included Libraries
-# ifndef ARDUINO_LIBS
-# ARDUINO_LIBS = rosserial_arduino
-# endif
+ifndef ARDUINO_LIBS
+ARDUINO_LIBS = amis-30543-arduino SPI
+endif
 
 # User Installed Library Location
 ifndef USER_LIB_PATH
