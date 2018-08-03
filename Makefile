@@ -28,7 +28,7 @@ endif
 
 # Arduino Included Libraries
 ifndef ARDUINO_LIBS
-ARDUINO_LIBS = amis-30543-arduino SPI
+ARDUINO_LIBS = SPI
 endif
 
 # User Installed Library Location
