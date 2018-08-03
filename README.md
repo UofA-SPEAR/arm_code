@@ -8,7 +8,7 @@ StepperC (stepper custom) is source code from the original Arduino Stepper libra
 
 Dependencies
 ------------
-- amis-30543-arduino library (https://github.com/pololu/amis-30543-arduino)
+- amis-30543-arduino library from https://github.com/pololu/amis-30543-arduino included as AMIS30543.h
 
 motor class
 -----------
