@@ -16,7 +16,6 @@
 //DCPotMotor shoulderMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
 //Stepper elbowMotor(200, 4, 5, 2, 60, 0, UINT32_MAX-1);
 Stepper wristPitchMotor(15652, 6, 7, 3, 60, 0, UINT32_MAX-1);
-//StepperAmis wristPitchMotorAmis(&wristPitchMotor, 5);
 //DCMotor wristRollMotor(10, 11, 20, 19, 32, 374, 25, 0, UINT32_MAX);
 //DCMotor fingersMotor(13, 12, 30, 21, 31, 374, 25, 0, UINT32_MAX-1);
 
@@ -47,9 +46,11 @@ int main(){
 	setup();
     delay(1000);
 
+    StepperAmis wristPitchMotorAmis(&wristPitchMotor, 5);
+
     //int stepPin = 6;
     //int dirPin = 7;
-    int ssPin = 5;
+    //int ssPin = 5;
     
     // Drive the NXT/STEP and DIR pins low initially.
     //digitalWrite(stepPin, LOW);
@@ -57,11 +58,11 @@ int main(){
     //digitalWrite(dirPin, LOW);
     //pinMode(dirPin, OUTPUT);
 
-    AMIS30543 testStepper;
-    testStepper.init(ssPin);
-    testStepper.setStepMode(1);
-    testStepper.enableDriver();
-    testStepper.setCurrentMilliamps(1000);
+    //AMIS30543 testStepper;
+    //testStepper.init(ssPin);
+    //testStepper.setStepMode(1);
+    //testStepper.enableDriver();
+    //testStepper.setCurrentMilliamps(1000);
 
     wristPitchMotor.rotateToRadian(UINT32_MAX / 2);
 
