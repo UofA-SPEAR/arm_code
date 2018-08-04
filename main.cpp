@@ -12,15 +12,15 @@
 #define UINT32_MAX 4294967295UL
 
 // Motors need to be global variables since they need to be modified by interrupt functions
-Stepper baseMotor(200, 22, 23, 18, 60, 0, UINT32_MAX-1);
-DCPotMotor shoulderMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
-Stepper elbowMotor(200, 4, 5, 2, 60, 0, UINT32_MAX-1);
-Stepper wristPitchMotor(200, 6, 7, 3, 60, 0, UINT32_MAX-1);
-StepperAmis wristPitchMotorAmis(&wristPitchMotor, 5);
-DCMotor wristRollMotor(10, 11, 20, 19, 32, 374, 25, 0, UINT32_MAX);
-DCMotor fingersMotor(13, 12, 30, 21, 31, 374, 25, 0, UINT32_MAX-1);
+//Stepper baseMotor(200, 22, 23, 18, 60, 0, UINT32_MAX-1);
+//DCPotMotor shoulderMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
+//Stepper elbowMotor(200, 4, 5, 2, 60, 0, UINT32_MAX-1);
+Stepper wristPitchMotor(15652, 6, 7, 3, 60, 0, UINT32_MAX-1);
+//StepperAmis wristPitchMotorAmis(&wristPitchMotor, 5);
+//DCMotor wristRollMotor(10, 11, 20, 19, 32, 374, 25, 0, UINT32_MAX);
+//DCMotor fingersMotor(13, 12, 30, 21, 31, 374, 25, 0, UINT32_MAX-1);
 
-// This function will be called by an interrupt
+/* // This function will be called by an interrupt
 void updatePositionFingers() {
     fingersMotor.updatePosition();
 }
@@ -29,116 +29,42 @@ void zeroFingers() {
 // this function should be called from an interrupt
     fingersMotor.powerOff();
     fingersMotor.encoderStepPosition = 0;
-}
+} */
 
 void setup(){
 	init();
     SPI.begin();
 	Serial.begin(9600);
-    pinMode(13, OUTPUT);
 	Serial.println("Initalized");
     delay(1000);
 
-    // attach interupts for DC motors with encoders
+    /* // attach interupts for DC motors with encoders
     attachInterrupt(digitalPinToInterrupt(fingersMotor.encoderPinA), updatePositionFingers, RISING);
-    attachInterrupt(digitalPinToInterrupt(fingersMotor.limitSwitchPin), zeroFingers, FALLING);
-}
-
-void motor_test(){
-	Serial.println("init stepper");
-	Stepper testMotor(200, 3, 4, 5, 60, 0, UINT32_MAX);
-
-	Serial.println("setting rotation speed");
-	testMotor.setSpeed(120);
-
-
-	//full angle test
-    uint32_t increment = 100000000;
-	for(uint32_t base = increment; base >= increment; base += increment){
-		Serial.println("-------new base-----");
-		Serial.println(base);
-		Serial.println("--------------------");
-		testMotor.rotateToRadian(base); //set to base angle
-        delay(100);
-	}
-
-	Serial.println("done");
-
-}
-
-void DCMotorSimpleTest() {
-    DCMotor testMotor(8, 9, 3, 2, 4, 374, 25, 0, UINT32_MAX);
-
-    Serial.println("-----Beginning DC Motor Test-----");
-    testMotor.powerOn(true, 25);
-    delay(1001);
-    testMotor.powerOff();
-    delay(1001);
-    testMotor.powerOn(false, 25);
-    delay(1001);
-    testMotor.powerOff();
-    Serial.println("-----End DC Motor Test-----");
-}
-
-void encoderTest() {
-
-    Serial.println("Beginning Encoder Test");
-
-    fingersMotor.powerOn(true, 25);
-    while (abs(fingersMotor.encoderStepPosition) < fingersMotor.pulsesPerRevolution) {
-        Serial.println(fingersMotor.current_motor_radian);
-        Serial.println("---");
-        Serial.println(digitalRead(fingersMotor.encoderPinB));
-    }
-    fingersMotor.powerOff();
-    delay(1000);
-    
-    fingersMotor.powerOn(false, 25);
-    while (fingersMotor.encoderStepPosition != 0) {
-        Serial.println(fingersMotor.encoderStepPosition);
-    }
-    fingersMotor.powerOff();
-}
-
-void DCAngleTest () {
-//full angle test for DCMotor
-//there are some integer overflow errors here
-
-    int basesCount = 4;
-    uint32_t base = UINT32_MAX / basesCount;
-    int targetsCount = 8;
-    uint32_t target = UINT32_MAX / targetsCount;
-	for(int i = 0; i < basesCount; i++){
-        base = base + i * (UINT32_MAX / basesCount);
-		Serial.println("-------new base-----");
-		Serial.println(base);
-		Serial.println("--------------------");
-		fingersMotor.rotateToRadian(base); //set to base angle
-        delay(1000);
-        
-        //target angles and back
-        for(int j = 0; j < targetsCount; j++){
-            target = target + j * (UINT32_MAX / targetsCount);
-            Serial.println((uint32_t)(base+target));
-            fingersMotor.rotateToRadian(base + target);
-            delay(500);
-            fingersMotor.rotateToRadian(base);
-            delay(500);
-        }
-	}
-
-	Serial.println("done");
+    attachInterrupt(digitalPinToInterrupt(fingersMotor.limitSwitchPin), zeroFingers, FALLING); */
 }
 
 int main(){
 	setup();
     delay(1000);
 
-    wristPitchMotorAmis.p_stepper->step(200);
+    //int stepPin = 6;
+    //int dirPin = 7;
+    int ssPin = 5;
+    
+    // Drive the NXT/STEP and DIR pins low initially.
+    //digitalWrite(stepPin, LOW);
+    //pinMode(stepPin, OUTPUT);
+    //digitalWrite(dirPin, LOW);
+    //pinMode(dirPin, OUTPUT);
 
-    //while (1) {
-        //Serial.println(fingersMotor.encoderStepPosition);
-    //}
+    AMIS30543 testStepper;
+    testStepper.init(ssPin);
+    testStepper.setStepMode(1);
+    testStepper.enableDriver();
+    testStepper.setCurrentMilliamps(1000);
+
+    wristPitchMotor.rotateToRadian(UINT32_MAX / 2);
+
 	/* Arm testArm;
 	uint32_t buffer[7];
 

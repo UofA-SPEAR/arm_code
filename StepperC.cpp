@@ -6,7 +6,7 @@
 #define UINT32_MAX 4294967295LL
 
 
-Stepper::Stepper(int number_of_steps, int stepPin, int dirPin, int limitSwitchPin, long RPM, uint32_t lowerBound, uint32_t upperBound){
+Stepper::Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limitSwitchPin, long RPM, uint32_t lowerBound, uint32_t upperBound){
   /*
   Constructor: 2-pin Stepper motor constructor with A4988 Driver module.
   */
@@ -27,6 +27,7 @@ Stepper::Stepper(int number_of_steps, int stepPin, int dirPin, int limitSwitchPi
   pinMode(this->stepPin, OUTPUT);
   pinMode(this->dirPin, OUTPUT);
   pinMode(this->limitSwitchPin, INPUT_PULLUP);
+  digitalWrite(this->stepPin, LOW);
   digitalWrite(this->dirPin, this->direction);
 
   //set speed in RPM
@@ -57,8 +58,9 @@ void Stepper::rotateToRadian(uint32_t target_radian){
   }
 
   //convert difference radian to number of steps and execute # steps
-  int required_steps = diff / radian_per_step;
-  step(required_steps);
+  int64_t required_steps = diff / radian_per_step;
+
+  this->step(required_steps);
   this->current_motor_radian = target_radian;
 }
 
@@ -71,7 +73,7 @@ void Stepper::setSpeed(long RPM){
 }
 
 
-void Stepper::step(int steps_to_move){
+void Stepper::step(int64_t steps_to_move){
   /*
    * Moves the motor [steps_to_move] steps.  If the number is negative,
    * the motor moves in the reverse direction.
@@ -82,7 +84,7 @@ void Stepper::step(int steps_to_move){
     steps_to_move = -1 * steps_to_move;
   }
 
-  int steps_left = abs(steps_to_move);  // how many steps to take
+  int64_t steps_left = abs(steps_to_move);  // how many steps to take
 
   // determine direction based on whether steps_to_mode is + or -:
   if (steps_to_move > 0){
@@ -136,6 +138,9 @@ void Stepper::stepMotor(int rotationDelay){
   delayMicroseconds(rotationDelay);
   digitalWrite(stepPin,LOW);
   delayMicroseconds(rotationDelay);
+
+  // TODO: don't hard code this delay
+  delayMicroseconds(2000);
 }
 
 void Stepper::calibrate() {
