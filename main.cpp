@@ -30,6 +30,10 @@ void zeroFingers() {
     fingersMotor.encoderStepPosition = 0;
 } */
 
+void zeroWristPitch() {
+    wristPitchMotor.current_motor_radian = 0;
+}
+
 void setup(){
 	init();
     SPI.begin();
@@ -40,6 +44,8 @@ void setup(){
     /* // attach interupts for DC motors with encoders
     attachInterrupt(digitalPinToInterrupt(fingersMotor.encoderPinA), updatePositionFingers, RISING);
     attachInterrupt(digitalPinToInterrupt(fingersMotor.limitSwitchPin), zeroFingers, FALLING); */
+
+    attachInterrupt(digitalPinToInterrupt(wristPitchMotor.limitSwitchPin), zeroWristPitch, FALLING);
 }
 
 int main(){
@@ -48,23 +54,9 @@ int main(){
 
     StepperAmis wristPitchMotorAmis(&wristPitchMotor, 5);
 
-    //int stepPin = 6;
-    //int dirPin = 7;
-    //int ssPin = 5;
-    
-    // Drive the NXT/STEP and DIR pins low initially.
-    //digitalWrite(stepPin, LOW);
-    //pinMode(stepPin, OUTPUT);
-    //digitalWrite(dirPin, LOW);
-    //pinMode(dirPin, OUTPUT);
-
-    //AMIS30543 testStepper;
-    //testStepper.init(ssPin);
-    //testStepper.setStepMode(1);
-    //testStepper.enableDriver();
-    //testStepper.setCurrentMilliamps(1000);
-
-    wristPitchMotor.rotateToRadian(UINT32_MAX / 2);
+    wristPitchMotor.calibrate();
+    //wristPitchMotor.rotateToRadian(UINT32_MAX / 2);
+    wristPitchMotor.rotateToRadian(UINT32_MAX / 4);
 
 	/* Arm testArm;
 	uint32_t buffer[7];
