@@ -5,7 +5,7 @@
 #include <math.h>
 #include <stdint.h>
 
-Stepper::Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limitSwitchPin, long RPM, uint32_t lowerBound, uint32_t upperBound){
+Stepper::Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limitSwitchPin, uint32_t stepDelay, uint32_t lowerBound, uint32_t upperBound){
   /*
   Constructor: 2-pin Stepper motor constructor with A4988 Driver module.
   */
@@ -17,6 +17,7 @@ Stepper::Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limit
   this->stepPin = stepPin;
   this->dirPin = dirPin;
   this->limitSwitchPin = limitSwitchPin;
+  this->stepDelay = stepDelay;
   this->radian_per_step = UINT32_MAX  / steps_per_rotation;
   this->current_motor_radian = 0;
   this->upperBound = upperBound;
@@ -28,9 +29,6 @@ Stepper::Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limit
   pinMode(this->limitSwitchPin, INPUT_PULLUP);
   digitalWrite(this->stepPin, LOW);
   digitalWrite(this->dirPin, this->direction);
-
-  //set speed in RPM
-  this->setSpeed(RPM);
 
   // set forwardDirection to HIGH by default
   this->setForwardDirection(true);
@@ -59,18 +57,17 @@ void Stepper::rotateToRadian(uint32_t target_radian){
   //convert difference radian to number of steps and execute # steps
   int64_t required_steps = diff / radian_per_step;
 
+  if (required_steps < 0) {
+    Serial.println("negative");
+    delay(1000);
+  } else {
+    Serial.println("positive");
+    delay(1000);
+  }
+
   this->step(required_steps);
   this->current_motor_radian = target_radian;
 }
-
-
-void Stepper::setSpeed(long RPM){
-  /*
-  Sets the speed in revs per minute
-  */
-  this->step_delay = 60L * 1000L * 1000L / this->steps_per_rotation / RPM;
-}
-
 
 void Stepper::step(int64_t steps_to_move){
   /*
@@ -93,52 +90,26 @@ void Stepper::step(int64_t steps_to_move){
   if (steps_to_move < 0){
     this->direction = LOW;
     digitalWrite(this->dirPin, direction);
-   }
+  } 
 
   // decrement the number of steps, moving one step each time:
   while (steps_left > 0){
-    unsigned long now = micros(); // MIGHT >1 hour running problem?
-
-    // It is important that this subtraction is done in
-    // an assignment to an unsigned variable
-    unsigned long diff = now - this->last_step_time;
-
-    // move only if the appropriate delay has passed:
-    if (diff >= this->step_delay){
-      // get the timeStamp of when you stepped:
-      this->last_step_time = now;
-      // increment or decrement the step number,
-      // depending on direction:
-      if (this->direction == HIGH){
-        this->step_number++;
-        if (this->step_number == this->steps_per_rotation) {
-          this->step_number = 0;
-        }
-      }else{
-        if (this->step_number == LOW) { //nooooot the right variable
-          this->step_number = this->steps_per_rotation;
-        }
-        this->step_number--;
-      }
       // decrement the steps left:
       steps_left--;
       //Cause pulse of stepper motor
-      stepMotor((unsigned long)(this->step_delay / 2));
-    }
+      stepMotor(this->stepDelay);
   }
 }
 
 
-void Stepper::stepMotor(int rotationDelay){
+void Stepper::stepMotor(uint32_t stepDelay){
   /*
-  Steps the motor by a single step, runtime: 2*rotationDelay
+  Steps the motor by a single step
   */
   digitalWrite(stepPin,HIGH);
-  delayMicroseconds(rotationDelay);
+  delayMicroseconds(4);
   digitalWrite(stepPin,LOW);
-  delayMicroseconds(rotationDelay);
 
-  // TODO: don't hard code this delay
   delayMicroseconds(2000);
 }
 

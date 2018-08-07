@@ -50,9 +50,12 @@ int main(){
     Serial.println("started");
 
     // initialize steppers that use the amis driver
-    StepperAmis elbowMotorAmis(&(arm->elbowMotor), 42);
+    StepperAmis elbowMotorAmis(42, 2000);
 
-	uint32_t buffer[6];
+    arm->elbowMotor.step(2000);
+    arm->elbowMotor.step(-2000);
+
+	/*uint32_t buffer[6];
     for(;;){
         Serial.println(":(");
         if (Serial.available() >= 24) {
@@ -64,7 +67,7 @@ int main(){
         }else{
             Serial.println("else");
         }
-    }
+    }*/
 
 	return 0;
 }

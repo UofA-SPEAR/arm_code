@@ -1,15 +1,12 @@
 #include "Arduino.h"
 #include "StepperAmis.h"
 
-StepperAmis::StepperAmis(Stepper* p_stepper, int ssPin) {
-    this->p_stepper = p_stepper;
+StepperAmis::StepperAmis(int ssPin, uint16_t currentLimit) {
     this->ssPin = ssPin;
+    this->currentLimit = currentLimit;
 
     this->amis.init(this->ssPin);
-    this->amis.setStepMode(1);
+    this->amis.setStepMode(1); //compensated full one phase
     this->amis.enableDriver();
-    this->amis.setCurrentMilliamps(1500);
-}
-void StepperAmis::rotateToRadian(uint32_t target) {
-    this->p_stepper->rotateToRadian(target);
+    this->amis.setCurrentMilliamps(this->currentLimit);
 }
