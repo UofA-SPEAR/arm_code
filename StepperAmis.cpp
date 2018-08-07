@@ -8,7 +8,7 @@ StepperAmis::StepperAmis(Stepper* p_stepper, int ssPin) {
     this->amis.init(this->ssPin);
     this->amis.setStepMode(1);
     this->amis.enableDriver();
-    this->amis.setCurrentMilliamps(1000);
+    this->amis.setCurrentMilliamps(1500);
 }
 void StepperAmis::rotateToRadian(uint32_t target) {
     this->p_stepper->rotateToRadian(target);

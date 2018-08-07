@@ -10,6 +10,7 @@
 class Stepper: public Motor {
 
   public:
+    Stepper() {}
     Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limitSwitchPin, long RPM, uint32_t lowerBound, uint32_t upperBound);
     void setSpeed(long RPM);
     void step(int64_t number_of_steps);

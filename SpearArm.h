@@ -14,7 +14,15 @@ class Arm{
     Motor** motors;
 
     public:
-        Arm(Motor* motors[6]);
+
+        Stepper baseMotor;
+        DCPotMotor shoulderMotor;
+        Stepper elbowMotor;
+        Stepper wristPitchMotor;
+        DCMotor wristRollMotor;
+        DCMotor fingersMotor;
+
+        Arm();
         void armTo(uint32_t *targets);
 };
 

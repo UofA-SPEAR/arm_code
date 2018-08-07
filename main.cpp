@@ -9,29 +9,23 @@
 #include <math.h>
 #include <string.h>
 #include <stdint.h>
-#define UINT32_MAX 4294967295UL
 
-// Motors need to be global variables since they need to be modified by interrupt functions
-//Stepper baseMotor(200, 22, 23, 18, 60, 0, UINT32_MAX-1);
-//DCPotMotor shoulderMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
-//Stepper elbowMotor(200, 4, 5, 2, 60, 0, UINT32_MAX-1);
-Stepper wristPitchMotor(15652, 6, 7, 3, 60, 0, UINT32_MAX-1);
-//DCMotor wristRollMotor(10, 11, 20, 19, 32, 374, 25, 0, UINT32_MAX);
-//DCMotor fingersMotor(13, 12, 30, 21, 31, 374, 25, 0, UINT32_MAX-1);
+// arm needs to be a global variable since the motors need to be modified by interrupt functions
+Arm* arm;
 
-/* // This function will be called by an interrupt
+// This function will be called by an interrupt
 void updatePositionFingers() {
-    fingersMotor.updatePosition();
+    arm->fingersMotor.updatePosition();
 }
 void zeroFingers() {
 // set encoderStepPosition to zero when the end stop is hit
 // this function should be called from an interrupt
-    fingersMotor.powerOff();
-    fingersMotor.encoderStepPosition = 0;
-} */
+    arm->fingersMotor.powerOff();
+    arm->fingersMotor.encoderStepPosition = 0;
+}
 
-void zeroWristPitch() {
-    wristPitchMotor.current_motor_radian = 0;
+void zeroElbow() {
+    arm->elbowMotor.current_motor_radian = 0;
 }
 
 void setup(){
@@ -40,35 +34,37 @@ void setup(){
 	Serial.begin(9600);
 	Serial.println("Initalized");
     delay(1000);
+	Serial.println("Delayed");
 
-    /* // attach interupts for DC motors with encoders
-    attachInterrupt(digitalPinToInterrupt(fingersMotor.encoderPinA), updatePositionFingers, RISING);
-    attachInterrupt(digitalPinToInterrupt(fingersMotor.limitSwitchPin), zeroFingers, FALLING); */
+    // attach interupts for DC motors with encoders
+    attachInterrupt(digitalPinToInterrupt(arm->fingersMotor.encoderPinA), updatePositionFingers, RISING);
+    attachInterrupt(digitalPinToInterrupt(arm->fingersMotor.limitSwitchPin), zeroFingers, FALLING);
 
-    attachInterrupt(digitalPinToInterrupt(wristPitchMotor.limitSwitchPin), zeroWristPitch, FALLING);
+    attachInterrupt(digitalPinToInterrupt(arm->elbowMotor.limitSwitchPin), zeroElbow, FALLING);
 }
 
 int main(){
 	setup();
-    delay(1000);
+    Serial.println("after setup");
+    arm = new Arm();
+    Serial.println("started");
 
-    StepperAmis wristPitchMotorAmis(&wristPitchMotor, 5);
+    // initialize steppers that use the amis driver
+    StepperAmis elbowMotorAmis(&(arm->elbowMotor), 42);
 
-    wristPitchMotor.calibrate();
-    //wristPitchMotor.rotateToRadian(UINT32_MAX / 2);
-    wristPitchMotor.rotateToRadian(UINT32_MAX / 4);
-
-	/* Arm testArm;
-	uint32_t buffer[7];
-
+	uint32_t buffer[6];
     for(;;){
-        // need to wait for serial data to be available?
-        Serial.readBytes((char *)buffer, sizeof(uint32_t)*7); // not sure if this works
-
-        Serial.println(buffer[1]);
-
-        testArm.armTo(&buffer[1]);
-    } */
+        Serial.println(":(");
+        if (Serial.available() >= 24) {
+            Serial.println("in Loop");
+            Serial.readBytes((char *)buffer, sizeof(uint32_t)*6); // not sure if this works
+            Serial.println(buffer[0]);
+            arm->armTo(&buffer[0]);
+            Serial.println("after armTo");
+        }else{
+            Serial.println("else");
+        }
+    }
 
 	return 0;
 }

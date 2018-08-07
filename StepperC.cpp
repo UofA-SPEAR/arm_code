@@ -3,8 +3,7 @@
 #include "Arduino.h"
 #include "StepperC.h"
 #include <math.h>
-#define UINT32_MAX 4294967295LL
-
+#include <stdint.h>
 
 Stepper::Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limitSwitchPin, long RPM, uint32_t lowerBound, uint32_t upperBound){
   /*

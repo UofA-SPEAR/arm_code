@@ -9,19 +9,17 @@
 #define WRIST_PITCH 3
 #define WRIST_ROLL 4
 #define FINGERS 5
-#define UINT32_MAX 4294967295UL
 
-Arm::Arm(Motor** motors){
-// motors should be a pointer to an array of six pointers to Motor objects
-  this->motors = motors;
+Arm::Arm(){
 
-  //set motor speeds
-  //this->BaseStepper->setSpeed(60);
-  //this->ShoulderStepper->setSpeed(60);
-  //this->ElbowStepper->setSpeed(60);
-  //this->WristStepper->setSpeed(60);
-  //this->FingerStepper->setSpeed(60);
+  baseMotor = Stepper(200, 22, 23, 18, 60, 0, UINT32_MAX-1);
+  shoulderMotor = DCPotMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
+  elbowMotor = Stepper(15652, 4, 5, 2, 60, 0, UINT32_MAX-1);
+  wristPitchMotor = Stepper(15652, 6, 7, 3, 60, 0, UINT32_MAX-1);
+  wristRollMotor = DCMotor(10, 11, 20, 19, 32, 374, 25, 0, UINT32_MAX);
+  fingersMotor = DCMotor(13, 12, 30, 21, 31, 374, 25, 0, UINT32_MAX-1);
 
+  Serial.println("motors init");
 }
 
 void Arm::armTo(uint32_t *targets){
@@ -30,10 +28,10 @@ void Arm::armTo(uint32_t *targets){
   will adjust each motor to target radians
   */
 
-  this->motors[BASE]        ->rotateToRadian(targets[BASE]);
-  this->motors[SHOULDER]    ->rotateToRadian(targets[SHOULDER]);
-  this->motors[ELBOW]       ->rotateToRadian(targets[ELBOW]);
-  this->motors[WRIST_PITCH] ->rotateToRadian(targets[WRIST_PITCH]);
-  this->motors[WRIST_ROLL]  ->rotateToRadian(targets[WRIST_ROLL]);
-  this->motors[FINGERS]     ->rotateToRadian(targets[FINGERS]);
+  this->baseMotor.rotateToRadian(targets[BASE]);
+  this->shoulderMotor.rotateToRadian(targets[SHOULDER]);
+  this->elbowMotor.rotateToRadian(targets[ELBOW]);
+  this->wristPitchMotor.rotateToRadian(targets[WRIST_PITCH]);
+  this->wristRollMotor.rotateToRadian(targets[WRIST_ROLL]);
+  this->fingersMotor.rotateToRadian(targets[FINGERS]);
 }
