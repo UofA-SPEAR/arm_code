@@ -2,14 +2,6 @@
 #include "SpearArm.h"
 #include <Arduino.h>
 
-//Constants for array index of each motor
-#define BASE 0
-#define SHOULDER 1
-#define ELBOW 2
-#define WRIST_PITCH 3
-#define WRIST_ROLL 4
-#define FINGERS 5
-
 Arm::Arm(){
 
   baseMotor = Stepper(200, 22, 23, 18, 2000, 0, UINT32_MAX-1);

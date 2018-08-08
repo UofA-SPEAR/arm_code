@@ -6,6 +6,15 @@
 #include "DCPotMotor.h"
 #include <stdint.h>
 
+//Constants for array index of each motor
+#define BASE 0
+#define SHOULDER 1
+#define ELBOW 2
+#define WRIST_PITCH 3
+#define WRIST_ROLL 4
+#define FINGERS 5
+
+
 class Arm{
     
     // motors should be a pointer to an array of 6 pointers to Motor objects

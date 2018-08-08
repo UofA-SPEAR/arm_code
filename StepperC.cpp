@@ -46,7 +46,7 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
 
     // calculate the optimal path towards the target position
     // only do optimization if the motor can rotate the full 360 degrees
-    int64_t diff = (target_step_number - this->step_number);
+    int64_t diff = ((int64_t)target_step_number) - ((int64_t)this->step_number);
     if(this->lowerBound == 0 && this->upperBound == UINT32_MAX) {
         if(diff > this->steps_per_rotation/2){
             diff = diff - this->steps_per_rotation;
@@ -63,6 +63,7 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
     } else {
         dir = this->reverseDirection;
     }
+    Serial.println(dir);
     digitalWrite(this->dirPin, dir);
 
     // move the motor and update step_number
