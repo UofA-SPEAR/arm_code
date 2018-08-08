@@ -34,6 +34,54 @@ Stepper::Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limit
   this->setForwardDirection(true);
 }
 
+void Stepper::rotateTowardsRadian(uint32_t target_radian) {
+    // for 10 milliseconds or less, moves motor towards target_radian
+
+    // get the start time
+    uint32_t now = millis(); // timer will overflow after about 50 days
+
+    // calculate target step number
+    target_radian = constrain(target_radian, lowerBound, upperBound);
+    uint32_t target_step_number = target_radian / radian_per_step; 
+
+    // calculate the optimal path towards the target position
+    // only do optimization if the motor can rotate the full 360 degrees
+    int64_t diff = (target_step_number - this->step_number);
+    if(this->lowerBound == 0 && this->upperBound == UINT32_MAX) {
+        if(diff > this->steps_per_rotation/2){
+            diff = diff - this->steps_per_rotation;
+        }
+        if(diff < 0 && abs(diff) > abs(this->steps_per_rotation/2)){
+            diff = this->steps_per_rotation + diff;
+        }
+    }
+
+    // determine direction
+    int dir;
+    if (diff > 0) {
+        dir = this->forwardDirection;
+    } else {
+        dir = this->reverseDirection;
+    }
+    digitalWrite(this->dirPin, dir);
+
+    // move the motor and update step_number
+    while((millis() - now < 10) && this->step_number != target_step_number) {
+        this->stepMotor(this->stepDelay);
+        if (dir == this->forwardDirection) {
+            if (this->step_number == this->steps_per_rotation) {
+                this->step_number = 0;
+            }
+            this->step_number++;
+        } else {
+            if (this->step_number == 0) {
+                this->step_number = this->steps_per_rotation;
+            }
+            this->step_number--;
+        }
+    }
+}
+
 
 void Stepper::rotateToRadian(uint32_t target_radian){
   /*

@@ -52,8 +52,9 @@ int main(){
     // initialize steppers that use the amis driver
     StepperAmis elbowMotorAmis(42, 2000);
 
-    arm->elbowMotor.step(2000);
-    arm->elbowMotor.step(-2000);
+    while(1){
+        arm->elbowMotor.rotateTowardsRadian(UINT32_MAX /4 *3);
+    }
 
 	/*uint32_t buffer[6];
     for(;;){
