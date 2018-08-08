@@ -48,6 +48,7 @@ int main(){
     arm->wristPitchMotor.setForwardDirection(false);
 
     // initialize steppers that use the amis driver
+    StepperAmis baseMotorAmis(41, 2000);
     StepperAmis elbowMotorAmis(42, 2000);
 
 	uint32_t buffer[6];
@@ -56,6 +57,7 @@ int main(){
             Serial.readBytes((char *)buffer, sizeof(uint32_t)*6);
             Serial.println(buffer[ELBOW]);
         }
+        arm->baseMotor.rotateTowardsRadian(buffer[BASE]);
         arm->elbowMotor.rotateTowardsRadian(buffer[ELBOW]);
     }
 

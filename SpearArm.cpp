@@ -4,9 +4,9 @@
 
 Arm::Arm(){
 
-  baseMotor = Stepper(200, 22, 23, 18, 2000, 0, UINT32_MAX-1);
+  baseMotor = Stepper(15652, 22, 23, 18, 8000, 0, UINT32_MAX-1);
   shoulderMotor = DCPotMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
-  elbowMotor = Stepper(15652, 4, 5, 2, 8000, 0, UINT32_MAX/2);
+  elbowMotor = Stepper(15652, 4, 5, 2, 8000, 0, UINT32_MAX/3);
   wristPitchMotor = Stepper(15652, 6, 7, 3, 2000, 0, UINT32_MAX-1);
   wristRollMotor = DCMotor(10, 11, 20, 19, 32, 374, 25, 0, UINT32_MAX);
   fingersMotor = DCMotor(13, 12, 30, 21, 31, 374, 25, 0, UINT32_MAX-1);
