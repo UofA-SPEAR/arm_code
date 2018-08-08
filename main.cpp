@@ -45,6 +45,7 @@ void setup(){
 int main(){
 	setup();
     arm = new Arm();
+    arm->wristPitchMotor.setForwardDirection(false);
 
     // initialize steppers that use the amis driver
     StepperAmis elbowMotorAmis(42, 2000);
