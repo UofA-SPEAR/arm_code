@@ -11,8 +11,9 @@ class DCPotMotor: public DCMotor {
         uint32_t potPosition;
 
         DCPotMotor() {}
-        DCPotMotor (int dirPin, int pwmPin, int potPin, uint32_t lowerBoundPot, uint32_t upperBoundPot, uint32_t lowerBound, uint32_t upperBound);
+        DCPotMotor (int dirPin, int pwmPin, int potPin, uint32_t lowerBoundPot, uint32_t upperBoundPot);
         void updatePosition();
+        void rotateTowardsRadian(uint32_t target_radian);
         void rotateToRadian(uint32_t target_radian);
 };
 #endif

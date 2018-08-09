@@ -8,6 +8,7 @@ class Motor {
 
     public:
         virtual void rotateToRadian(uint32_t target_radian) = 0;
+        virtual void rotateTowardsRadian(uint32_t target_radian) = 0;
         void setForwardDirection(bool selection);
 
         uint32_t lowerBound;

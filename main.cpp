@@ -71,11 +71,7 @@ int main(){
         if (Serial.available() >= 24) {
             Serial.readBytes((char *)buffer, sizeof(uint32_t)*6);
         }
-        arm->baseMotor.rotateTowardsRadian(buffer[BASE]);
-        arm->elbowMotor.rotateTowardsRadian(buffer[ELBOW]);
-        arm->wristRollMotor.rotateTowardsRadian(buffer[WRIST_ROLL]);
-        arm->fingersMotor.rotateTowardsRadian(buffer[FINGERS]);
-        Serial.println(arm->fingersMotor.encoderStepPosition);
+        arm->adjust(buffer);
     }
 
 	return 0;

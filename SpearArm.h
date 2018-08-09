@@ -17,11 +17,6 @@
 
 class Arm{
     
-    // motors should be a pointer to an array of 6 pointers to Motor objects
-    // This is done because the DCMotor, DCPotMotor, and Stepper classes are pointer-compatible
-    //   therefore we can write the Arm class without caring what specific type of motor each one is.
-    Motor** motors;
-
     public:
 
         Stepper baseMotor;
@@ -32,6 +27,7 @@ class Arm{
         DCMotor fingersMotor;
 
         Arm();
+        void adjust(uint32_t *targets);
         void armTo(uint32_t *targets);
 };
 

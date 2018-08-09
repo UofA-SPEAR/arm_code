@@ -135,8 +135,10 @@ void DCMotor::rotateTowardsRadian (uint32_t target_radian) {
     }
     
     // while encoder is not at target and 10ms have not passed
-    while((millis() - startTime < 10) && this->encoderStepPosition != targetEncoderStepPosition) {
-        this->powerOn(dir, this->dutyCycle);
+    while(millis() - startTime < 10) {
+        if (this->encoderStepPosition != targetEncoderStepPosition){
+            this->powerOn(dir, this->dutyCycle);
+        }
     }
     this->powerOff();
 

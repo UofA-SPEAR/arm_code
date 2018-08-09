@@ -66,18 +66,20 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
     digitalWrite(this->dirPin, dir);
 
     // move the motor and update step_number
-    while((millis() - startTime < 10) && this->step_number != target_step_number) {
-        this->stepMotor(this->stepDelay);
-        if (dir == this->forwardDirection) {
-            if (this->step_number == this->steps_per_rotation) {
-                this->step_number = 0;
+    while(millis() - startTime < 10) {
+        if (this->step_number != target_step_number){
+            this->stepMotor(this->stepDelay);
+            if (dir == this->forwardDirection) {
+                if (this->step_number == this->steps_per_rotation) {
+                    this->step_number = 0;
+                }
+                this->step_number++;
+            } else {
+                if (this->step_number == 0) {
+                    this->step_number = this->steps_per_rotation;
+                }
+                this->step_number--;
             }
-            this->step_number++;
-        } else {
-            if (this->step_number == 0) {
-                this->step_number = this->steps_per_rotation;
-            }
-            this->step_number--;
         }
     }
 }

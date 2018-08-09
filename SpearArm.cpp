@@ -5,13 +5,26 @@
 Arm::Arm(){
 
   baseMotor = Stepper(15652, 22, 23, 18, 8000, 0, UINT32_MAX-1);
-  shoulderMotor = DCPotMotor(8, 9, A0, 0, 1023, 0, UINT32_MAX);
+  shoulderMotor = DCPotMotor(8, 9, A0, 100, 900);
   elbowMotor = Stepper(15652, 4, 5, 19, 8000, 0, UINT32_MAX/3);
   wristPitchMotor = Stepper(15652, 6, 7, 20, 2000, 0, UINT32_MAX-1);
   wristRollMotor = DCMotor(10, 11, 21, 2, 374, 25, 0, UINT32_MAX);
   fingersMotor = DCMotor(13, 12, 30, 3, 374, 25, 0, UINT32_MAX-1);
 
   Serial.println("motors init");
+}
+
+void Arm::adjust(uint32_t *targets){
+  /*
+   * Moves each motor towards it's target radian for a short duration of time
+   */
+
+  this->baseMotor.rotateTowardsRadian(targets[BASE]);
+  this->shoulderMotor.rotateTowardsRadian(targets[SHOULDER]);
+  this->elbowMotor.rotateTowardsRadian(targets[ELBOW]);
+  this->wristPitchMotor.rotateTowardsRadian(targets[WRIST_PITCH]);
+  this->wristRollMotor.rotateTowardsRadian(targets[WRIST_ROLL]);
+  this->fingersMotor.rotateTowardsRadian(targets[FINGERS]);
 }
 
 void Arm::armTo(uint32_t *targets){
