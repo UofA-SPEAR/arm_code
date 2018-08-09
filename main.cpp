@@ -67,6 +67,7 @@ int main(){
     StepperAmis elbowMotorAmis(42, 2000);
 
 	uint32_t buffer[6];
+	buffer[SHOULDER] = ((float)400) / ((float)1023) * UINT32_MAX;
     for(;;){
         if (Serial.available() >= 24) {
             Serial.readBytes((char *)buffer, sizeof(uint32_t)*6);

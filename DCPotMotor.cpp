@@ -2,14 +2,19 @@
 
 #include "Arduino.h"
 
-DCPotMotor::DCPotMotor (int dirPin, int pwmPin, int potPin, uint32_t lowerBoundPot, uint32_t upperBoundPot) {
+DCPotMotor::DCPotMotor (int dirPin, int pwmPin, int potPin, uint8_t maxDutyCycle, uint32_t lowerBoundPot, uint32_t upperBoundPot) {
     this->dirPin = dirPin;
     this->pwmPin = pwmPin;
     this->potPin = potPin;
+    this->maxDutyCycle = maxDutyCycle;
     this->lowerBoundPot = lowerBoundPot;
     this->upperBoundPot = upperBoundPot;
     this->lowerBound = 0;
     this->upperBound = UINT32_MAX;
+
+    this->Kp = 0;
+    this->Ki = 0;
+    this->Kd = 0;
 
     pinMode(this->dirPin, OUTPUT);
     pinMode(this->pwmPin, OUTPUT);
@@ -18,6 +23,18 @@ DCPotMotor::DCPotMotor (int dirPin, int pwmPin, int potPin, uint32_t lowerBoundP
 
     // set forwardDirection to HIGH by default
     this->setForwardDirection(true);
+}
+
+void DCPotMotor::setPIDParams (double Kp, double Ki, double Kd, double Hz) {
+    this->Kp = Kp;
+    this->Ki = Ki;
+    this->Kd = Kd;
+    this->Hz = Hz;
+
+    // Re-configure FastPID object
+    this->pid.clear();
+    this->pid.setCoefficients(this->Kp, this->Ki, this->Kd, this->Hz);
+    this->pid.setOutputRange(-50, 50); //TODO: don't hard code the max duty cycle
 }
 
 void DCPotMotor::updatePosition () {
@@ -39,26 +56,25 @@ void DCPotMotor::rotateTowardsRadian (uint32_t target_radian) {
     // constrain once more in case floating point errors have caused targetPotPosition to be out of range
     targetPotPosition = constrain(targetPotPosition, this->lowerBoundPot, this->upperBoundPot);
 
-    // return early if already at targetPotPosition
     this->updatePosition();
-    if (this->potPosition == targetPotPosition) {
-        return;
-    }
 
-    // determine direction towards target position
+    // using PID algorithm, determine appropriate duty cycle
+    int16_t PIDOutput = this->pid.step(targetPotPosition, this->potPosition);
+
+    // set direction
     bool dir;
-    if (targetPotPosition > this->potPosition) {
+    if (PIDOutput > 0) {
         dir = true;
     } else {
         dir = false;
+        PIDOutput = abs(PIDOutput);
     }
 
     // move until motor reaches target position or 10 milliseconds have elapsed
-    while((millis() - startTime < 10) && this->potPosition != targetPotPosition) {
-        this->powerOn(dir, this->dutyCycle);
+    while(millis() - startTime < 10) {
+        this->powerOn(dir, PIDOutput);
         this->updatePosition();
     }
-    this->powerOff();
 }
 
 void DCPotMotor::rotateToRadian (uint32_t target_radian) {

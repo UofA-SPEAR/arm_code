@@ -111,12 +111,6 @@ void DCMotor::rotateTowardsRadian (uint32_t target_radian) {
     // only perform optimization if the motor can rotate freely through 360 degrees
     int64_t encoderStepDiff = ((int64_t)targetEncoderStepPosition) - ((int64_t)this->encoderStepPosition);
 
-    // return early if the motor is already at the target position
-    if (encoderStepDiff == 0) {
-        this->powerOff();
-        return;
-    }
-
     if (this->lowerBound == 0 && this->upperBound == UINT32_MAX) {
         if(encoderStepDiff > this->pulsesPerRevolution/2){
             encoderStepDiff = encoderStepDiff - this->pulsesPerRevolution;

@@ -9,6 +9,7 @@ StepperC (stepper custom) is source code from the original Arduino Stepper libra
 Dependencies
 ------------
 - amis-30543-arduino library from https://github.com/pololu/amis-30543-arduino included as AMIS30543.h
+- FastPID library from https://github.com/mike-matera/FastPID included as FastPID.h and FastPID.cpp
 
 motor class
 -----------
