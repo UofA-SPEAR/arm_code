@@ -59,7 +59,7 @@ void attachInterrupts() {
 int main(){
 	setup();
     arm = new Arm();
-    attachInterrupts();
+    attachInterrupts(); // this must be done AFTER arm constructor is called since arm constructor sets pin modes
     arm->wristPitchMotor.setForwardDirection(false);
 
     // initialize steppers that use the amis driver
