@@ -2,12 +2,11 @@
 
 #include "Arduino.h"
 
-DCMotor::DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, int encoderPinB, int pulsesPerRevolution, uint8_t dutyCycle, uint32_t lowerBound, uint32_t upperBound) {
+DCMotor::DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, int pulsesPerRevolution, uint8_t dutyCycle, uint32_t lowerBound, uint32_t upperBound) {
     this->dirPin = dirPin;
     this->pwmPin = pwmPin;
     this->limitSwitchPin = limitSwitchPin;
     this->encoderPinA = encoderPinA;
-    this->encoderPinB = encoderPinB;
     this->pulsesPerRevolution = pulsesPerRevolution;
     this->dutyCycle = dutyCycle;
     this->lowerBound = lowerBound;
@@ -17,7 +16,6 @@ DCMotor::DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, i
     pinMode(this->pwmPin, OUTPUT);
     pinMode(this->limitSwitchPin, INPUT_PULLUP);
     pinMode(this->encoderPinA, INPUT);
-    pinMode(this->encoderPinB, INPUT);
     
     // for safety, ensure motor does not start moving when instantiated
     this->powerOff();
@@ -72,7 +70,7 @@ void DCMotor::calibrate () {
 void DCMotor::updatePosition () {
 // this function should be called by interrupt every time encoderPinA RISES    
 
-    if (this->direction) {
+    if (this->direction == this->forwardDirection) {
         this->encoderStepPosition++;
     } else {
         this->encoderStepPosition--;
@@ -87,6 +85,61 @@ void DCMotor::updatePosition () {
 
     // update current_motor_radian
     this->current_motor_radian = (double) (this->encoderStepPosition) / (double) (this->pulsesPerRevolution) * UINT32_MAX;
+}
+
+void DCMotor::rotateTowardsRadian (uint32_t target_radian) {
+// Given a target angle, calculates the corresponding encoder position and direction in which the motor needs to move
+// Moves the motor in that direction for 10 milliseconds or until it reaches the desired encoder position, whichever comes first
+
+    // get the start time
+    uint32_t startTime = millis();
+
+    // constrain to motor bounds
+    target_radian = constrain(target_radian, this->lowerBound, this->upperBound);
+
+    // calculate target radian in terms of encoder steps
+    // this is important because if you do it in terms of a UINT32_t target radian, you might never reach that exact target radian
+    int targetEncoderStepPosition = (double)(target_radian) / (double)(UINT32_MAX) * this->pulsesPerRevolution;
+
+    // Fixes bug where motor would keep turning forever if given an angle on or near 360 degrees
+    // Since this->encoderStepPosition is modded with this->pulsesPerRevolution, it is never equal to this->pulsesPerRevolution. It gets to this->pulsesPerRevolution - 1, then is reset back to zero. Therefore, we must always use 0 instead of this->pulsesPerRevolution or else the code below will think that the motor never reaches its target position.
+    if (targetEncoderStepPosition == this->pulsesPerRevolution) {
+        targetEncoderStepPosition = 0;
+    }
+
+    // calculate the most efficient path to target angle
+    // only perform optimization if the motor can rotate freely through 360 degrees
+    int64_t encoderStepDiff = ((int64_t)targetEncoderStepPosition) - ((int64_t)this->encoderStepPosition);
+
+    // return early if the motor is already at the target position
+    if (encoderStepDiff == 0) {
+        this->powerOff();
+        return;
+    }
+
+    if (this->lowerBound == 0 && this->upperBound == UINT32_MAX) {
+        if(encoderStepDiff > this->pulsesPerRevolution/2){
+            encoderStepDiff = encoderStepDiff - this->pulsesPerRevolution;
+        }
+        if(encoderStepDiff < 0 && abs(encoderStepDiff) > abs(this->pulsesPerRevolution/2)){
+            encoderStepDiff = this->pulsesPerRevolution + encoderStepDiff;
+        }
+    }
+
+    // determine direction
+    bool dir;
+    if (encoderStepDiff > 0) {
+        dir = true;
+    } else {
+        dir = false;
+    }
+    
+    // while encoder is not at target and 10ms have not passed
+    while((millis() - startTime < 10) && this->encoderStepPosition != targetEncoderStepPosition) {
+        this->powerOn(dir, this->dutyCycle);
+    }
+    this->powerOff();
+
 }
 
 void DCMotor::rotateToRadian (uint32_t target_radian) {

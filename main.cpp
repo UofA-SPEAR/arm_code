@@ -13,17 +13,27 @@
 // arm needs to be a global variable since the motors need to be modified by interrupt functions
 Arm* arm;
 
-// This function will be called by an interrupt
+// define interrupt positions for encoders on DC motors and limit switches on DC motors
+void updatePositionWristRoll () {
+// read encoder position every time a pulse is received
+    arm->wristRollMotor.updatePosition();
+
+    Serial.println("I");
+}
+void zeroWristRoll () {
+// set encoderStepPosition to zero when the end stop is hit
+    arm->wristRollMotor.powerOff();
+    arm->wristRollMotor.encoderStepPosition = 0;
+}
 void updatePositionFingers() {
     arm->fingersMotor.updatePosition();
 }
 void zeroFingers() {
-// set encoderStepPosition to zero when the end stop is hit
-// this function should be called from an interrupt
     arm->fingersMotor.powerOff();
     arm->fingersMotor.encoderStepPosition = 0;
 }
 
+// define interrupt functions for limit switches on stepper motors
 void zeroElbow() {
     arm->elbowMotor.current_motor_radian = 0;
 }
@@ -35,10 +45,13 @@ void setup(){
 	Serial.println("Initalized");
     delay(1000);
 
-    // attach interupts for DC motors with encoders
+    // attach interrupts for DC motors with encoders and limit switches
+    attachInterrupt(digitalPinToInterrupt(arm->wristRollMotor.encoderPinA), updatePositionWristRoll, RISING);
+    attachInterrupt(digitalPinToInterrupt(arm->wristRollMotor.limitSwitchPin), zeroWristRoll, FALLING);  
     attachInterrupt(digitalPinToInterrupt(arm->fingersMotor.encoderPinA), updatePositionFingers, RISING);
     attachInterrupt(digitalPinToInterrupt(arm->fingersMotor.limitSwitchPin), zeroFingers, FALLING);
 
+    // attach interrupts for stepper motors with limit switches
     attachInterrupt(digitalPinToInterrupt(arm->elbowMotor.limitSwitchPin), zeroElbow, FALLING);
 }
 
@@ -55,10 +68,12 @@ int main(){
     for(;;){
         if (Serial.available() >= 24) {
             Serial.readBytes((char *)buffer, sizeof(uint32_t)*6);
-            Serial.println(buffer[ELBOW]);
         }
         arm->baseMotor.rotateTowardsRadian(buffer[BASE]);
         arm->elbowMotor.rotateTowardsRadian(buffer[ELBOW]);
+        arm->wristRollMotor.rotateTowardsRadian(buffer[WRIST_ROLL]);
+        arm->fingersMotor.rotateTowardsRadian(buffer[FINGERS]);
+        //Serial.println(arm->fingersMotor.encoderStepPosition);
     }
 
 	return 0;

@@ -38,7 +38,7 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
     // for 10 milliseconds or less, moves motor towards target_radian
 
     // get the start time
-    uint32_t now = millis(); // timer will overflow after about 50 days
+    uint32_t startTime = millis(); // timer will overflow after about 50 days
 
     // calculate target step number
     target_radian = constrain(target_radian, lowerBound, upperBound);
@@ -63,11 +63,10 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
     } else {
         dir = this->reverseDirection;
     }
-    Serial.println(dir);
     digitalWrite(this->dirPin, dir);
 
     // move the motor and update step_number
-    while((millis() - now < 10) && this->step_number != target_step_number) {
+    while((millis() - startTime < 10) && this->step_number != target_step_number) {
         this->stepMotor(this->stepDelay);
         if (dir == this->forwardDirection) {
             if (this->step_number == this->steps_per_rotation) {
@@ -107,10 +106,8 @@ void Stepper::rotateToRadian(uint32_t target_radian){
   int64_t required_steps = diff / radian_per_step;
 
   if (required_steps < 0) {
-    Serial.println("negative");
     delay(1000);
   } else {
-    Serial.println("positive");
     delay(1000);
   }
 
