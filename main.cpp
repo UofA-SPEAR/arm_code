@@ -17,8 +17,6 @@ Arm* arm;
 void updatePositionWristRoll () {
 // read encoder position every time a pulse is received
     arm->wristRollMotor.updatePosition();
-
-    Serial.println("I");
 }
 void zeroWristRoll () {
 // set encoderStepPosition to zero when the end stop is hit
@@ -45,6 +43,9 @@ void setup(){
 	Serial.println("Initalized");
     delay(1000);
 
+}
+
+void attachInterrupts() {
     // attach interrupts for DC motors with encoders and limit switches
     attachInterrupt(digitalPinToInterrupt(arm->wristRollMotor.encoderPinA), updatePositionWristRoll, RISING);
     attachInterrupt(digitalPinToInterrupt(arm->wristRollMotor.limitSwitchPin), zeroWristRoll, FALLING);  
@@ -58,6 +59,7 @@ void setup(){
 int main(){
 	setup();
     arm = new Arm();
+    attachInterrupts();
     arm->wristPitchMotor.setForwardDirection(false);
 
     // initialize steppers that use the amis driver
@@ -73,7 +75,7 @@ int main(){
         arm->elbowMotor.rotateTowardsRadian(buffer[ELBOW]);
         arm->wristRollMotor.rotateTowardsRadian(buffer[WRIST_ROLL]);
         arm->fingersMotor.rotateTowardsRadian(buffer[FINGERS]);
-        //Serial.println(arm->fingersMotor.encoderStepPosition);
+        Serial.println(arm->fingersMotor.encoderStepPosition);
     }
 
 	return 0;
