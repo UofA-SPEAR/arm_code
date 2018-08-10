@@ -81,7 +81,7 @@ int main(){
     StepperAmis elbowMotorAmis(42, 2000);
 
     // move motors that have limit switches until they hit their limit switches
-    arm->home();
+    //arm->home();
     Serial.println("home");
 
 	uint32_t buffer[6] = {0};

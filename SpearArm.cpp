@@ -31,8 +31,8 @@ void Arm::home(){
     this->shoulderMotor.home(); // moves shoulder to a comfortable position
     this->elbowMotor.home();
     this->wristPitchMotor.home();
-    this->wristRollMotor.home();
-    this->fingersMotor.home();
+    // wrist roll has no limit switch
+    //this->fingersMotor.home(); // add this back later
 
   }
 }
