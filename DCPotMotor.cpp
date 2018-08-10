@@ -43,6 +43,11 @@ void DCPotMotor::updatePosition () {
     this->potPosition = analogRead(this->potPin);
 }
 
+void DCPotMotor::home () {
+// moves shoulder to a comfortable position (potentiometer position 400)
+    this->rotateTowardsRadian( ((double)400) / ((double)1023) * UINT32_MAX);
+}
+
 void DCPotMotor::rotateTowardsRadian (uint32_t target_radian) {
 // given a target angle, calculates the corresponding potentiometer position and rotates the motor in the correct direction for 10 milliseconds or until it reaches that position, whichever comes first
 

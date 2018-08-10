@@ -16,6 +16,27 @@ Arm::Arm(){
   Serial.println("motors init");
 }
 
+void Arm::home(){
+// Moves all Stepper and DCMotor towards zero until they hit limit switch
+// Moves DCPotMotor (shoulder) to a comfortable position
+// DCPotMotor does not need a limit switch
+
+  while (this->baseMotor.step_number != 0
+      && this->elbowMotor.step_number != 0
+      && this->wristPitchMotor.step_number != 0
+      && this->wristRollMotor.encoderStepPosition != 0
+      && this->fingersMotor.encoderStepPosition != 0) {
+
+    this->baseMotor.home();
+    this->shoulderMotor.home(); // moves shoulder to a comfortable position
+    this->elbowMotor.home();
+    this->wristPitchMotor.home();
+    this->wristRollMotor.home();
+    this->fingersMotor.home();
+
+  }
+}
+
 void Arm::adjust(uint32_t *targets){
   /*
    * Moves each motor towards it's target radian for a short duration of time

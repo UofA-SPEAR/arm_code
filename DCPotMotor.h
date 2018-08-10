@@ -25,6 +25,7 @@ class DCPotMotor: public DCMotor {
         DCPotMotor (int dirPin, int pwmPin, int potPin, uint8_t maxDutyCycle, uint32_t lowerBoundPot, uint32_t upperBoundPot);
         void setPIDParams (double Kp, double Ki, double Kd, double Hz);
         void updatePosition();
+        void home();
         void rotateTowardsRadian(uint32_t target_radian);
         void rotateToRadian(uint32_t target_radian);
 };

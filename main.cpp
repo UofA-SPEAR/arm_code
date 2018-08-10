@@ -22,6 +22,7 @@ void zeroWristRoll () {
 // set encoderStepPosition to zero when the end stop is hit
     arm->wristRollMotor.powerOff();
     arm->wristRollMotor.encoderStepPosition = 0;
+    arm->wristRollMotor.current_motor_radian = 0;
 }
 void updatePositionFingers() {
     arm->fingersMotor.updatePosition();
@@ -29,11 +30,21 @@ void updatePositionFingers() {
 void zeroFingers() {
     arm->fingersMotor.powerOff();
     arm->fingersMotor.encoderStepPosition = 0;
+    arm->fingersMotor.current_motor_radian = 0;
 }
 
 // define interrupt functions for limit switches on stepper motors
+void zeroBase() {
+    arm->baseMotor.step_number = 0;
+    arm->baseMotor.current_motor_radian = 0;
+}
 void zeroElbow() {
+    arm->elbowMotor.step_number = 0;
     arm->elbowMotor.current_motor_radian = 0;
+}
+void zeroWristPitch() {
+    arm->wristPitchMotor.step_number = 0;
+    arm->wristPitchMotor.current_motor_radian = 0;
 }
 
 void setup(){
@@ -49,11 +60,14 @@ void attachInterrupts() {
     // attach interrupts for DC motors with encoders and limit switches
     attachInterrupt(digitalPinToInterrupt(arm->wristRollMotor.encoderPinA), updatePositionWristRoll, RISING);
     attachInterrupt(digitalPinToInterrupt(arm->wristRollMotor.limitSwitchPin), zeroWristRoll, FALLING);  
+
     attachInterrupt(digitalPinToInterrupt(arm->fingersMotor.encoderPinA), updatePositionFingers, RISING);
     attachInterrupt(digitalPinToInterrupt(arm->fingersMotor.limitSwitchPin), zeroFingers, FALLING);
 
     // attach interrupts for stepper motors with limit switches
+    attachInterrupt(digitalPinToInterrupt(arm->baseMotor.limitSwitchPin), zeroBase, FALLING);
     attachInterrupt(digitalPinToInterrupt(arm->elbowMotor.limitSwitchPin), zeroElbow, FALLING);
+    attachInterrupt(digitalPinToInterrupt(arm->wristPitchMotor.limitSwitchPin), zeroWristPitch, FALLING);
 }
 
 int main(){
@@ -66,8 +80,11 @@ int main(){
     StepperAmis baseMotorAmis(41, 2000);
     StepperAmis elbowMotorAmis(42, 2000);
 
-	uint32_t buffer[6];
-	buffer[SHOULDER] = ((float)400) / ((float)1023) * UINT32_MAX;
+    // move motors that have limit switches until they hit their limit switches
+    arm->home();
+
+	uint32_t buffer[6] = {0};
+	buffer[SHOULDER] = ((double)400) / ((double)1023) * UINT32_MAX; // ensure shoulder starts at a comfortable location
     for(;;){
         if (Serial.available() >= 24) {
             Serial.readBytes((char *)buffer, sizeof(uint32_t)*6);

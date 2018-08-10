@@ -17,7 +17,7 @@ class Stepper: public Motor {
     void rotateTowardsRadian(uint32_t target_radian);
     void rotateToRadian(uint32_t target_radian);
     void stepMotor(uint32_t stepDelay);
-    void calibrate();
+    void home();
 
     uint32_t stepDelay;
     uint32_t currentLimit;

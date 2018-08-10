@@ -161,20 +161,17 @@ void Stepper::stepMotor(uint32_t stepDelay){
   delayMicroseconds(2000);
 }
 
-void Stepper::calibrate() {
+void Stepper::home() {
   // moves motor in false direction until interrupted by limit switch
   // this function should be called in an interrupt
   // the interrupt function should set current_motor_radian to lowerBound when the limit switch is triggered
 
-  // check to see if limit switch is already triggered
   if (digitalRead(this->limitSwitchPin) == LOW) {
-    this->current_motor_radian = 0;
+    this->step_number = 0;
     return;
   }
 
-  this->current_motor_radian = this->upperBound;
-  while (this->current_motor_radian > this->lowerBound) {
-    this->step(-1);
-  }
-  this->current_motor_radian = lowerBound;
+  this->step_number = this->steps_per_rotation;
+  this->rotateTowardsRadian(0);
+
 }

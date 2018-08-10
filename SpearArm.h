@@ -27,6 +27,7 @@ class Arm{
         DCMotor fingersMotor;
 
         Arm();
+        void home();
         void adjust(uint32_t *targets);
         void armTo(uint32_t *targets);
 };

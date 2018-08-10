@@ -49,7 +49,7 @@ void DCMotor::powerOff () {
     digitalWrite(this->pwmPin, LOW);
 }
 
-void DCMotor::calibrate () {
+void DCMotor::home () {
 // moves motor in false direction until interrupted by limit switch
 // ENSURE YOU HAVE SET UP THE INTERRUPT BEFORE CALLING THIS FUNCTION
 
@@ -59,12 +59,8 @@ void DCMotor::calibrate () {
     }
 
     this->encoderStepPosition = this->pulsesPerRevolution;
+    this->rotateTowardsRadian(0);
 
-    while (this->encoderStepPosition != 0) {
-        this->powerOn(false, this->dutyCycle);
-    }
-    this->powerOff();
-    this->encoderStepPosition = 0;
 }
 
 void DCMotor::updatePosition () {
