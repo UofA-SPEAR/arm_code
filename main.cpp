@@ -81,7 +81,9 @@ int main(){
     StepperAmis elbowMotorAmis(42, 2000);
 
     // move motors that have limit switches until they hit their limit switches
-    arm->home();
+    //arm->home();
+    arm->wristPitchMotor.home();
+    Serial.println("home");
 
 	uint32_t buffer[6] = {0};
 	buffer[SHOULDER] = ((double)400) / ((double)1023) * UINT32_MAX; // ensure shoulder starts at a comfortable location
