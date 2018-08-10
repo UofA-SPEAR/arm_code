@@ -81,8 +81,7 @@ int main(){
     StepperAmis elbowMotorAmis(42, 2000);
 
     // move motors that have limit switches until they hit their limit switches
-    //arm->home();
-    arm->wristPitchMotor.home();
+    arm->home();
     Serial.println("home");
 
 	uint32_t buffer[6] = {0};
@@ -91,6 +90,17 @@ int main(){
         if (Serial.available() >= 24) {
             Serial.readBytes((char *)buffer, sizeof(uint32_t)*6);
         }
+
+        // If we receive all zeros from the control panel, do the homing procedure
+        if (buffer[BASE] == 0 
+         && buffer[SHOULDER] == 0 
+         && buffer[ELBOW] == 0 
+         && buffer[WRIST_PITCH] == 0 
+         && buffer[WRIST_ROLL] == 0 
+         && buffer[FINGERS] == 0 ) {
+            arm->home();
+        } 
+
         arm->adjust(buffer);
     }
 
