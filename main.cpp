@@ -80,10 +80,7 @@ int main(){
         if (Serial.available() >= 8) {
             if (handle_serial(buffer) == SERIAL_SUCCESS) {
                 handle_command(buffer, armPosition);
-            } else {
-                Serial.println("Packet rejected."); // Remove this
             }
-        }
 
         arm->adjust(armPosition);
     }
@@ -98,13 +95,11 @@ static ser_err_t handle_serial(char* buffer) {
 
     // Error checking
     if (buffer[0] != 2 || buffer[7] != 3) { // Start or stop bytes are gone
-        Serial.println("No Start/Stop Bytes!"); // remove this
         while(Serial.read() != -1);
         return SERIAL_ERROR;
     }
 
     if (buffer[6] != (uint8_t)(buffer[2] + buffer[3] + buffer[4] + buffer[5])) {
-        Serial.println("Checksum Invalid!"); // remove this
         while(Serial.read() != -1);
         return SERIAL_ERROR;
     }
@@ -114,11 +109,6 @@ static ser_err_t handle_serial(char* buffer) {
 }
 static void handle_command(char* buffer, uint32_t* armPosition) {
     uint32_t angle;
-    Serial.print("Data: ");
-    Serial.print(buffer[2]); Serial.print(" ");
-    Serial.print(buffer[3]); Serial.print(" ");
-    Serial.print(buffer[4]); Serial.print(" ");
-    Serial.print(buffer[5]); Serial.print("\n");
 
     // buffer[1] is command
 
@@ -132,15 +122,9 @@ static void handle_command(char* buffer, uint32_t* armPosition) {
     }
 
     if (buffer[1] >= NUM_MOTORS) {
-        Serial.println("Incorrect command"); // delete this
         return;
     }
 
     // Set the correct motor to the command's angle
     armPosition[(uint8_t)buffer[1]] = angle;
-    //Debugging stuff, delete this
-    Serial.print("Command: ");
-    Serial.println((uint8_t)buffer[1]);
-    Serial.print("Angle: ");
-    Serial.println(angle);
 }
