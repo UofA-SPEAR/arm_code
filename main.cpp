@@ -97,7 +97,7 @@ static ser_err_t handle_serial(char * buffer) {
         return SERIAL_ERROR;
     }
 
-    if (buffer[6] != (buffer[2] + buffer[3] + buffer[4] + buffer[5])) {
+    if (buffer[6] != (uint8_t)(buffer[2] + buffer[3] + buffer[4] + buffer[5])) {
         Serial.println("Checksum Invalid!"); // remove this
         return SERIAL_ERROR;
     }
@@ -130,5 +130,5 @@ static void handle_command(char * buffer, uint32_t * armPosition) {
     }
 
     // Set the correct motor to the command's angle
-    armPosition[buffer[1]] = angle;
+    armPosition[(uint8_t)buffer[1]] = angle;
 }
