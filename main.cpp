@@ -13,6 +13,14 @@
 // arm needs to be a global variable since the motors need to be modified by interrupt functions
 Arm* arm;
 
+typedef enum {
+    SERIAL_SUCCESS,
+    SERIAL_ERROR,
+} ser_err_t;
+
+static ser_err_t handle_serial(char * buffer);
+static void handle_command(char * buffer, uint32_t * armPosition)
+
 // define interrupt positions for encoders on DC motors and limit switches on DC motors
 void updatePositionWristRoll () {
 // read encoder position every time a pulse is received
@@ -71,6 +79,8 @@ void attachInterrupts() {
 }
 
 int main(){
+    uint32_t armPosition[NUM_MOTORS];
+
 	setup();
     arm = new Arm();
     attachInterrupts(); // this must be done AFTER arm constructor is called since arm constructor sets pin modes
@@ -83,35 +93,68 @@ int main(){
     arm->home();
     Serial.println("home");
 
-    /* arm->baseMotor.step_number = arm->baseMotor.steps_per_rotation;
-    arm->elbowMotor.step_number = arm->elbowMotor.steps_per_rotation;
-    while (arm->baseMotor.step_number !=0 && arm->elbowMotor.step_number != 0) {
-        arm->baseMotor.home();
-        arm->elbowMotor.home();
-    }
-    Serial.println("home"); */
-
-	uint32_t buffer[6] = {0};
+	uint32_t buffer[8] = {0};
 	buffer[SHOULDER] = ((double)400) / ((double)1023) * UINT32_MAX; // ensure shoulder starts at a comfortable location
-    for(;;){
-        if (Serial.available() >= 24) {
-            Serial.readBytes((char *)buffer, sizeof(uint32_t)*6);
-            Serial.println(buffer[SHOULDER]);
 
-                /* // If we receive all zeros from the control panel, do the homing procedure
-                if (buffer[BASE] == 0 
-                 && buffer[SHOULDER] == 0 
-                 && buffer[ELBOW] == 0 
-                 && buffer[WRIST_PITCH] == 0 
-                 && buffer[WRIST_ROLL] == 0 
-                 && buffer[FINGERS] == 0 ) {
-                    arm->home();
-                } */
+
+    for(;;){
+        if (Serial.available() >= 8) {
+            if (handle_serial(buffer) == SERIAL_SUCCESS) {
+                handle_command(buffer, armPosition);
+            } else {
+                Serial.println("Packet rejected."); // Remove this
+            }
         }
 
-
-        arm->adjust(buffer);
+        arm->adjust(armPosition);
     }
 
 	return 0;
+}
+
+/**@brief Function to read in serial and reject malformed "packets"
+ */
+static ser_err_t handle_serial(char * buffer) {
+    Serial.readbytes(buffer, 8);
+
+    // Error checking
+    if (buffer[0] != 2 || buffer[7] != 3) { // Start or stop bytes are gone
+        Serial.println("No Start/Stop Bytes!"); // remove this
+        return SERIAL_ERROR;
+    }
+
+    if (buffer[6] != (buffer[2] + buffer[3] + buffer[4] + buffer[5])) {
+        Serial.println("Checksum Invalid!"); // remove this
+        return SERIAL_ERROR;
+    }
+
+    Serial.println("Packet Accepted.");
+    return SERIAL_SUCCESS;
+}
+static void handle_command(char * buffer, uint32_t * armPosition) {
+    uint32_t angle;
+
+    // buffer[1] is command
+
+    memcpy(&angle, buffer + 2, sizeof(uint32_t)); // Actual data starts at buffer[2]
+
+    //Debugging stuff, delete this
+    Serial.print("Command: ");
+    Serial.println(buffer[2]);
+    Serial.print("Angle: ");
+    Serial.println(angle);
+
+    // Homing command (254 because thats spear_home)
+    if (buffer[1] == 254) {
+        arm->home();
+        return;
+    }
+
+    if (buffer[1] >= NUM_MOTORS) {
+        Serial.println("Incorrect command"); // delete this
+        return;
+    }
+
+    // Set the correct motor to the command's angle
+    armPosition[buffer[1]] = angle;
 }

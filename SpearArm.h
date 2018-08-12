@@ -11,8 +11,8 @@
 #define SHOULDER 1
 #define ELBOW 2
 #define WRIST_PITCH 3
-#define WRIST_ROLL 4
-#define FINGERS 5
+
+#define NUM_MOTORS 4
 
 
 class Arm{

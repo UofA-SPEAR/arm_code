@@ -28,7 +28,7 @@ endif
 
 # Arduino Included Libraries
 ifndef ARDUINO_LIBS
-ARDUINO_LIBS = SPI FastPID 
+ARDUINO_LIBS = SPI
 endif
 
 # User Installed Library Location

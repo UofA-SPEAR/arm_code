@@ -2,8 +2,6 @@
 #include "SpearArm.h"
 #include <Arduino.h>
 
-#define NUM_MOTORS 5
-
 Arm::Arm(){
 
   baseMotor = Stepper(15652, 22, 23, 18, 8000, 0, UINT32_MAX-1);
