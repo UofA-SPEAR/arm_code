@@ -64,6 +64,8 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
         dir = this->reverseDirection;
     }
 
+    Serial.println(dir);
+
     digitalWrite(this->dirPin, dir);
     delayMicroseconds(5); // needed so direction pin has time to init
 

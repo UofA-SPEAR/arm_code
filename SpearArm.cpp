@@ -45,5 +45,7 @@ void Arm::adjust(uint32_t *targets){
   this->baseMotor.rotateTowardsRadian(targets[BASE]);
   this->shoulderMotor.rotateTowardsRadian(targets[SHOULDER]);
   this->elbowMotor.rotateTowardsRadian(targets[ELBOW]);
+  Serial.println("Wrist start");
   this->wristPitchMotor.rotateTowardsRadian(targets[WRIST_PITCH]);
+  Serial.println("Wrist end");
 }
