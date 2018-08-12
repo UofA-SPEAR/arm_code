@@ -113,7 +113,7 @@ static ser_err_t handle_serial(char * buffer) {
     return SERIAL_SUCCESS;
 }
 static void handle_command(char * buffer, uint32_t * armPosition) {
-    uint32_t angle = (buffer[2]) | ((buffer[3]) << 8) | ((buffer[4]) << 16) | ((buffer[5]) << 24);
+    uint32_t angle;
 
     // buffer[1] is command
 
