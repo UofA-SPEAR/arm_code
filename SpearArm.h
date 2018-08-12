@@ -20,7 +20,6 @@ class Arm{
         Arm();
         void home();
         void adjust(uint32_t *targets);
-        void armTo(uint32_t *targets);
 };
 
 #endif

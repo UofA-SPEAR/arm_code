@@ -45,21 +45,5 @@ void Arm::adjust(uint32_t *targets){
   this->baseMotor.rotateTowardsRadian(targets[BASE]);
   this->shoulderMotor.rotateTowardsRadian(targets[SHOULDER]);
   this->elbowMotor.rotateTowardsRadian(targets[ELBOW]);
-  //this->wristPitchMotor.rotateTowardsRadian(targets[WRIST_PITCH]);
-  this->wristRollMotor.rotateTowardsRadian(targets[WRIST_ROLL]);
-  this->fingersMotor.rotateTowardsRadian(targets[FINGERS]);
-}
-
-void Arm::armTo(uint32_t *targets){
-  /*
-  params: array of floats of target radians for each motor
-  will adjust each motor to target radians
-  */
-
-  this->baseMotor.rotateToRadian(targets[BASE]);
-  this->shoulderMotor.rotateToRadian(targets[SHOULDER]);
-  this->elbowMotor.rotateToRadian(targets[ELBOW]);
-  this->wristPitchMotor.rotateToRadian(targets[WRIST_PITCH]);
-  this->wristRollMotor.rotateToRadian(targets[WRIST_ROLL]);
-  this->fingersMotor.rotateToRadian(targets[FINGERS]);
+  this->wristPitchMotor.rotateTowardsRadian(targets[WRIST_PITCH]);
 }
