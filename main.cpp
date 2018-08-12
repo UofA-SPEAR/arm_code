@@ -135,7 +135,7 @@ static void handle_command(char * buffer, uint32_t * armPosition) {
     armPosition[(uint8_t)buffer[1]] = angle;
     //Debugging stuff, delete this
     Serial.print("Command: ");
-    Serial.println((uint8_t)buffer[2]);
+    Serial.println((uint8_t)buffer[1]);
     Serial.print("Angle: ");
     Serial.println(angle);
 }
