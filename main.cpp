@@ -45,9 +45,6 @@ void setup(){
 }
 
 void attachInterrupts() {
-    // attach interrupts for DC motors with encoders and limit switches
-    attachInterrupt(digitalPinToInterrupt(arm->fingersMotor.encoderPinA), updatePositionFingers, RISING);
-    attachInterrupt(digitalPinToInterrupt(arm->fingersMotor.limitSwitchPin), zeroFingers, FALLING);
 
     // attach interrupts for stepper motors with limit switches
     attachInterrupt(digitalPinToInterrupt(arm->baseMotor.limitSwitchPin), zeroBase, FALLING);
