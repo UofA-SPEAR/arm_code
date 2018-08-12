@@ -119,11 +119,6 @@ static void handle_command(char * buffer, uint32_t * armPosition) {
 
     memcpy(&angle, buffer + 2, sizeof(uint32_t)); // Actual data starts at buffer[2]
 
-    //Debugging stuff, delete this
-    Serial.print("Command: ");
-    Serial.println((uint8_t)buffer[2]);
-    Serial.print("Angle: ");
-    Serial.println(angle);
 
     // Homing command (254 because thats spear_home)
     if (buffer[1] == 254) {
@@ -138,4 +133,9 @@ static void handle_command(char * buffer, uint32_t * armPosition) {
 
     // Set the correct motor to the command's angle
     armPosition[(uint8_t)buffer[1]] = angle;
+    //Debugging stuff, delete this
+    Serial.print("Command: ");
+    Serial.println((uint8_t)buffer[2]);
+    Serial.print("Angle: ");
+    Serial.println(angle);
 }
