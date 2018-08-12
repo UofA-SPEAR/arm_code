@@ -73,7 +73,7 @@ int main(){
     //Serial.println("home");
 
 	char buffer[8] = {0};
-	buffer[SHOULDER] = (((double)400) / ((double)1023)) * UINT32_MAX; // ensure shoulder starts at a comfortable location
+	armPosition[SHOULDER] = (((double)400) / ((double)1023)) * UINT32_MAX; // ensure shoulder starts at a comfortable location
 
 
     for(;;){
