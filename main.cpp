@@ -21,6 +21,26 @@ typedef enum {
 static ser_err_t handle_serial(char * buffer);
 static void handle_command(char * buffer, uint32_t * armPosition);
 
+int digitalPinToInterrupt(int pin){
+    //Assumes you are on a mega
+    //2 3 21 20 19 18
+    switch(pin){
+        case 2:
+            return 0;
+        case 3:
+            return 1;
+        case 21:
+            return 2;
+        case 20:
+            return 3;
+        case 19:
+            return 4;
+        case 18:
+            return 5;
+    }
+    return -1;
+}
+
 // define interrupt functions for limit switches on stepper motors
 void zeroBase() {
     arm->baseMotor.step_number = 0;
