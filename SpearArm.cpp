@@ -4,12 +4,10 @@
 
 Arm::Arm(){
 
-  baseMotor = Stepper(15652, 22, 23, 18, 8000, 0, UINT32_MAX-1);
+  baseMotor = Stepper(15652, 10, 11, 2, 8000, 0, UINT32_MAX-1);
   shoulderMotor = DCPotMotor(8, 9, A0, 50, 110, 800);
-  elbowMotor = Stepper(15652, 4, 5, 19, 8000, 0, UINT32_MAX/3);
-  wristPitchMotor = Stepper(15652, 6, 7, 20, 2000, 0, UINT32_MAX-1);
-  wristRollMotor = DCMotor(10, 11, 21, 2, 374, 25, 0, UINT32_MAX);
-  fingersMotor = DCMotor(13, 12, 30, 3, 374, 25, 0, UINT32_MAX);
+  elbowMotor = Stepper(15652, 4, 5, 3, 8000, 0, UINT32_MAX/3);
+  wristPitchMotor = Stepper(15652, 6, 7, 18, 2000, 0, UINT32_MAX-1);
 
   shoulderMotor.setPIDParams(0.8, 0, 0, 1000/(THREAD_DURATION*NUM_MOTORS));
 

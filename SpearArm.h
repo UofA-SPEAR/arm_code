@@ -16,8 +16,6 @@ class Arm{
         DCPotMotor shoulderMotor;
         Stepper elbowMotor;
         Stepper wristPitchMotor;
-        DCMotor wristRollMotor;
-        DCMotor fingersMotor;
 
         Arm();
         void home();
