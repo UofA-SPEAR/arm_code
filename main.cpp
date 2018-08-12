@@ -19,27 +19,7 @@ typedef enum {
 } ser_err_t;
 
 static ser_err_t handle_serial(char * buffer);
-static void handle_command(char * buffer, uint32_t * armPosition)
-
-// define interrupt positions for encoders on DC motors and limit switches on DC motors
-void updatePositionWristRoll () {
-// read encoder position every time a pulse is received
-    arm->wristRollMotor.updatePosition();
-}
-void zeroWristRoll () {
-// set encoderStepPosition to zero when the end stop is hit
-    arm->wristRollMotor.powerOff();
-    arm->wristRollMotor.encoderStepPosition = 0;
-    arm->wristRollMotor.current_motor_radian = 0;
-}
-void updatePositionFingers() {
-    arm->fingersMotor.updatePosition();
-}
-void zeroFingers() {
-    arm->fingersMotor.powerOff();
-    arm->fingersMotor.encoderStepPosition = 0;
-    arm->fingersMotor.current_motor_radian = 0;
-}
+static void handle_command(char * buffer, uint32_t * armPosition);
 
 // define interrupt functions for limit switches on stepper motors
 void zeroBase() {
@@ -115,7 +95,7 @@ int main(){
 /**@brief Function to read in serial and reject malformed "packets"
  */
 static ser_err_t handle_serial(char * buffer) {
-    Serial.readbytes(buffer, 8);
+    Serial.readBytes(buffer, 8);
 
     // Error checking
     if (buffer[0] != 2 || buffer[7] != 3) { // Start or stop bytes are gone
