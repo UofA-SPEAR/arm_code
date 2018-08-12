@@ -81,7 +81,7 @@ int main(){
             if (handle_serial(buffer) == SERIAL_SUCCESS) {
                 handle_command(buffer, armPosition);
             }
-
+        }
         arm->adjust(armPosition);
     }
 
