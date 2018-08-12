@@ -1,6 +1,6 @@
 //sourced from https://github.com/arduino/Arduino/blob/master/libraries/Stepper/src/Stepper.cpp
 
-#include "Arduino.h"
+#include "common.h"
 #include "StepperC.h"
 #include <math.h>
 #include <stdint.h>

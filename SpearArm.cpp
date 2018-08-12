@@ -1,6 +1,6 @@
 #include "StepperC.h"
 #include "SpearArm.h"
-#include <Arduino.h>
+#include "common.h"
 
 Arm::Arm(){
 

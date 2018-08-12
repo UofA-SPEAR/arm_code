@@ -1,6 +1,6 @@
 #include "DCMotor.h"
 
-#include "Arduino.h"
+#include "common.h"
 
 DCMotor::DCMotor (int dirPin, int pwmPin, int limitSwitchPin, int encoderPinA, int pulsesPerRevolution, uint8_t dutyCycle, uint32_t lowerBound, uint32_t upperBound) {
     this->dirPin = dirPin;

@@ -1,4 +1,4 @@
-#include "Arduino.h"
+#include "common.h"
 
 #include "Motor.h"
 

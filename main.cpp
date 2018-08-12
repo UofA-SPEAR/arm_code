@@ -5,10 +5,10 @@
 #include "DCMotor.h"
 #include "DCPotMotor.h"
 
-#include <Arduino.h>
+#include "common.h"
+
 #include <math.h>
 #include <string.h>
-#include <stdint.h>
 
 // arm needs to be a global variable since the motors need to be modified by interrupt functions
 Arm* arm;

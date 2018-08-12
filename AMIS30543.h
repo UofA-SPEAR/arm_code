@@ -16,7 +16,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <Arduino.h>
+#include "common.h" 
 #include <SPI.h>
 
 /*! This class provides low-level functions for reading and writing from the SPI

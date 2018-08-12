@@ -1,6 +1,6 @@
 #include "DCPotMotor.h"
 
-#include "Arduino.h"
+#include "common.h"
 
 DCPotMotor::DCPotMotor (int dirPin, int pwmPin, int potPin, uint8_t maxDutyCycle, uint32_t lowerBoundPot, uint32_t upperBoundPot) {
     this->dirPin = dirPin;

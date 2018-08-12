@@ -1,4 +1,4 @@
-#include "Arduino.h"
+#include "common.h"
 #include "StepperAmis.h"
 
 StepperAmis::StepperAmis(int ssPin, uint16_t currentLimit) {
