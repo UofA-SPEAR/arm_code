@@ -114,6 +114,11 @@ static ser_err_t handle_serial(char * buffer) {
 }
 static void handle_command(char * buffer, uint32_t * armPosition) {
     uint32_t angle;
+    Serial.print("Data: ");
+    Serial.print(buffer[2]); Serial.print(" ");
+    Serial.print(buffer[3]); Serial.print(" ");
+    Serial.print(buffer[4]); Serial.print(" ");
+    Serial.print(buffer[5]); Serial.print("\n");
 
     // buffer[1] is command
 
