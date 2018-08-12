@@ -99,11 +99,13 @@ static ser_err_t handle_serial(char * buffer) {
     // Error checking
     if (buffer[0] != 2 || buffer[7] != 3) { // Start or stop bytes are gone
         Serial.println("No Start/Stop Bytes!"); // remove this
+        while(Serial.available() != -1);
         return SERIAL_ERROR;
     }
 
     if (buffer[6] != (uint8_t)(buffer[2] + buffer[3] + buffer[4] + buffer[5])) {
         Serial.println("Checksum Invalid!"); // remove this
+        while(Serial.available() != -1);
         return SERIAL_ERROR;
     }
 
