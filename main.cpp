@@ -9,6 +9,10 @@
 
 #include <math.h>
 #include <string.h>
+#include "main.h"
+
+uint8_t stepper_hold;
+uint8_t in_home_mode;
 
 // arm needs to be a global variable since the motors need to be modified by interrupt functions
 Arm* arm;
@@ -60,17 +64,20 @@ void attachInterrupts() {
 int main(){
     uint32_t armPosition[NUM_MOTORS];
 
+    stepper_hold = 42;
+
 	setup();
     arm = new Arm();
     attachInterrupts(); // this must be done AFTER arm constructor is called since arm constructor sets pin modes
+    arm->baseMotor.setForwardDirection(true);
     arm->wristPitchMotor.setForwardDirection(false);
 
     // initialize steppers that use the amis driver
     StepperAmis elbowMotorAmis(12, 2000);
 
     // move motors that have limit switches until they hit their limit switches
-    //arm->home();
-    //Serial.println("home");
+    arm->home();
+    Serial.println("home");
 
 	char buffer[8] = {0};
 	armPosition[SHOULDER] = (((double)400) / ((double)1023)) * UINT32_MAX; // ensure shoulder starts at a comfortable location
@@ -83,6 +90,7 @@ int main(){
             }
         }
         arm->adjust(armPosition);
+        Serial.println(arm->shoulderMotor.potPosition);
     }
 
 	return 0;

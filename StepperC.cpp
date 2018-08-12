@@ -4,6 +4,7 @@
 #include "StepperC.h"
 #include <math.h>
 #include <stdint.h>
+#include "main.h"
 
 Stepper::Stepper(uint32_t steps_per_rotation, int stepPin, int dirPin, int limitSwitchPin, uint32_t stepDelay, uint32_t lowerBound, uint32_t upperBound){
   /*
@@ -45,16 +46,7 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
     uint32_t target_step_number = ((double)target_radian) / ((double)radian_per_step); 
 
     // calculate the optimal path towards the target position
-    // only do optimization if the motor can rotate the full 360 degrees
     int64_t diff = ((int64_t)target_step_number) - ((int64_t)this->step_number);
-    if(this->lowerBound == 0 && this->upperBound == UINT32_MAX) {
-        if(diff > this->steps_per_rotation/2){
-            diff = diff - this->steps_per_rotation;
-        }
-        if(diff < 0 && abs(diff) > abs(this->steps_per_rotation/2)){
-            diff = this->steps_per_rotation + diff;
-        }
-    }
 
     // determine direction
     int dir;
@@ -64,10 +56,17 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
         dir = this->reverseDirection;
     }
 
-    Serial.println(dir);
-
     digitalWrite(this->dirPin, dir);
+    Serial.println(dir);
     delayMicroseconds(5); // needed so direction pin has time to init
+
+    if (stepper_hold != 42) {
+        if (!in_home_mode) {
+            return;
+        }
+    }
+
+    stepper_hold = 1;
 
     // move the motor and update step_number
     while(millis() - startTime < THREAD_DURATION) {
