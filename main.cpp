@@ -18,8 +18,8 @@ typedef enum {
     SERIAL_ERROR,
 } ser_err_t;
 
-static ser_err_t handle_serial(char * buffer);
-static void handle_command(char * buffer, uint32_t * armPosition);
+static ser_err_t handle_serial(char* buffer);
+static void handle_command(char* buffer, uint32_t* armPosition);
 
 #ifndef digitalPinToInterrupt
 #define digitalPinToInterrupt(p)  ( (p) == 2 ? 0 : ((p) == 3 ? 1 : \
@@ -93,7 +93,7 @@ int main(){
 
 /**@brief Function to read in serial and reject malformed "packets"
  */
-static ser_err_t handle_serial(char * buffer) {
+static ser_err_t handle_serial(char* buffer) {
     Serial.readBytes(buffer, 8);
 
     // Error checking
@@ -112,7 +112,7 @@ static ser_err_t handle_serial(char * buffer) {
     Serial.println("Packet Accepted.");
     return SERIAL_SUCCESS;
 }
-static void handle_command(char * buffer, uint32_t * armPosition) {
+static void handle_command(char* buffer, uint32_t* armPosition) {
     uint32_t angle;
     Serial.print("Data: ");
     Serial.print(buffer[2]); Serial.print(" ");
