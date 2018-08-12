@@ -6,13 +6,6 @@
 #include "DCPotMotor.h"
 #include <stdint.h>
 
-//Constants for array index of each motor
-#define BASE 0
-#define SHOULDER 1
-#define ELBOW 2
-#define WRIST_PITCH 3
-
-#define NUM_MOTORS 4
 
 
 class Arm{
