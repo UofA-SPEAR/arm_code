@@ -42,7 +42,7 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
 
     // calculate target step number
     target_radian = constrain(target_radian, lowerBound, upperBound);
-    uint32_t target_step_number = target_radian / radian_per_step; 
+    uint32_t target_step_number = ((double)target_radian) / ((double)radian_per_step); 
 
     // calculate the optimal path towards the target position
     // only do optimization if the motor can rotate the full 360 degrees
@@ -63,22 +63,26 @@ void Stepper::rotateTowardsRadian(uint32_t target_radian) {
     } else {
         dir = this->reverseDirection;
     }
+
     digitalWrite(this->dirPin, dir);
+    delayMicroseconds(5); // needed so direction pin has time to init
 
     // move the motor and update step_number
-    while(millis() - startTime < 10) {
+    while(millis() - startTime < THREAD_DURATION) {
         if (this->step_number != target_step_number){
             this->stepMotor(this->stepDelay);
             if (dir == this->forwardDirection) {
                 if (this->step_number == this->steps_per_rotation) {
                     this->step_number = 0;
+                } else {
+                    this->step_number++;
                 }
-                this->step_number++;
             } else {
                 if (this->step_number == 0) {
                     this->step_number = this->steps_per_rotation;
+                } else {
+                    this->step_number--;
                 }
-                this->step_number--;
             }
         }
     }
@@ -166,12 +170,14 @@ void Stepper::home() {
   // this function should be called in an interrupt
   // the interrupt function should set current_motor_radian to lowerBound when the limit switch is triggered
 
+
   if (digitalRead(this->limitSwitchPin) == LOW) {
     this->step_number = 0;
     return;
   }
 
-  this->step_number = this->steps_per_rotation;
+
+  //this->step_number = this->steps_per_rotation;
   this->rotateTowardsRadian(0);
 
 }

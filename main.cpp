@@ -77,29 +77,38 @@ int main(){
     arm->wristPitchMotor.setForwardDirection(false);
 
     // initialize steppers that use the amis driver
-    StepperAmis baseMotorAmis(41, 2000);
     StepperAmis elbowMotorAmis(42, 2000);
 
     // move motors that have limit switches until they hit their limit switches
-    //arm->home();
+    arm->home();
     Serial.println("home");
+
+    /* arm->baseMotor.step_number = arm->baseMotor.steps_per_rotation;
+    arm->elbowMotor.step_number = arm->elbowMotor.steps_per_rotation;
+    while (arm->baseMotor.step_number !=0 && arm->elbowMotor.step_number != 0) {
+        arm->baseMotor.home();
+        arm->elbowMotor.home();
+    }
+    Serial.println("home"); */
 
 	uint32_t buffer[6] = {0};
 	buffer[SHOULDER] = ((double)400) / ((double)1023) * UINT32_MAX; // ensure shoulder starts at a comfortable location
     for(;;){
         if (Serial.available() >= 24) {
             Serial.readBytes((char *)buffer, sizeof(uint32_t)*6);
+            Serial.println(buffer[SHOULDER]);
+
+                /* // If we receive all zeros from the control panel, do the homing procedure
+                if (buffer[BASE] == 0 
+                 && buffer[SHOULDER] == 0 
+                 && buffer[ELBOW] == 0 
+                 && buffer[WRIST_PITCH] == 0 
+                 && buffer[WRIST_ROLL] == 0 
+                 && buffer[FINGERS] == 0 ) {
+                    arm->home();
+                } */
         }
 
-        // If we receive all zeros from the control panel, do the homing procedure
-        if (buffer[BASE] == 0 
-         && buffer[SHOULDER] == 0 
-         && buffer[ELBOW] == 0 
-         && buffer[WRIST_PITCH] == 0 
-         && buffer[WRIST_ROLL] == 0 
-         && buffer[FINGERS] == 0 ) {
-            arm->home();
-        } 
 
         arm->adjust(buffer);
     }
