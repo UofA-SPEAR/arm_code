@@ -87,7 +87,7 @@ int main(){
     arm->wristPitchMotor.setForwardDirection(false);
 
     // initialize steppers that use the amis driver
-    StepperAmis elbowMotorAmis(42, 2000);
+    StepperAmis elbowMotorAmis(12, 2000);
 
     // move motors that have limit switches until they hit their limit switches
     arm->home();
