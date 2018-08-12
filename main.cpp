@@ -67,7 +67,7 @@ int main(){
     arm->home();
     Serial.println("home");
 
-	uint32_t buffer[8] = {0};
+	char buffer[8] = {0};
 	buffer[SHOULDER] = ((double)400) / ((double)1023) * UINT32_MAX; // ensure shoulder starts at a comfortable location
 
 
