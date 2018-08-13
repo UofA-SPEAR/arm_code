@@ -3,7 +3,7 @@
 #ifndef Motor_h
 #define Motor_h
 #include <stdint.h>
-#define THREAD_DURATION 50
+#define THREAD_DURATION 10
 
 class Motor {
 

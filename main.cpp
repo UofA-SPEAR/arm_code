@@ -30,6 +30,7 @@ static void handle_command(char* buffer, uint32_t* armPosition);
             ((p) >= 18 && (p) <= 21 ? 23 - (p) : -1)) ) 
 #endif
 
+/*
 // define interrupt functions for limit switches on stepper motors
 void zeroBase() {
     arm->baseMotor.step_number = 0;
@@ -43,6 +44,7 @@ void zeroWristPitch() {
     arm->wristPitchMotor.step_number = 0;
     arm->wristPitchMotor.current_motor_radian = 0;
 }
+*/
 
 void setup(){
 	init();
@@ -53,6 +55,7 @@ void setup(){
 
 }
 
+/*
 void attachInterrupts() {
 
     // attach interrupts for stepper motors with limit switches
@@ -60,6 +63,7 @@ void attachInterrupts() {
     attachInterrupt(digitalPinToInterrupt(arm->elbowMotor.limitSwitchPin), zeroElbow, FALLING);
     attachInterrupt(digitalPinToInterrupt(arm->wristPitchMotor.limitSwitchPin), zeroWristPitch, FALLING);
 }
+*/
 
 int main(){
     uint32_t armPosition[NUM_MOTORS];
@@ -68,16 +72,16 @@ int main(){
 
 	setup();
     arm = new Arm();
-    attachInterrupts(); // this must be done AFTER arm constructor is called since arm constructor sets pin modes
-    arm->baseMotor.setForwardDirection(true);
-    arm->wristPitchMotor.setForwardDirection(false);
+    //attachInterrupts(); // this must be done AFTER arm constructor is called since arm constructor sets pin modes
+    //arm->baseMotor.setForwardDirection(true);
+    //arm->wristPitchMotor.setForwardDirection(false);
 
     // initialize steppers that use the amis driver
-    StepperAmis elbowMotorAmis(12, 2000);
+    // StepperAmis elbowMotorAmis(12, 2000);
 
     // move motors that have limit switches until they hit their limit switches
-    arm->home();
-    Serial.println("home");
+    //arm->home();
+    //Serial.println("home");
 
 	char buffer[8] = {0};
 	armPosition[SHOULDER] = (((double)400) / ((double)1023)) * UINT32_MAX; // ensure shoulder starts at a comfortable location
@@ -89,7 +93,8 @@ int main(){
                 handle_command(buffer, armPosition);
             }
         }
-        arm->adjust(armPosition);
+        //arm->adjust(armPosition);
+        arm->shoulderMotor.rotateTowardsRadian(armPosition[SHOULDER]);
         Serial.println(arm->shoulderMotor.potPosition);
     }
 

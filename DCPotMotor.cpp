@@ -76,7 +76,7 @@ void DCPotMotor::rotateTowardsRadian (uint32_t target_radian) {
     }
 
     // move until motor reaches target position or 10 milliseconds have elapsed
-    while(millis() - startTime < 10) {
+    while(millis() - startTime < THREAD_DURATION) {
         this->powerOn(dir, PIDOutput);
         this->updatePosition();
     }
