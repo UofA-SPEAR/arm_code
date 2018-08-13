@@ -6,7 +6,7 @@
 Arm::Arm(){
 
   //baseMotor = Stepper(15652, 10, 11, 2, 8000, 0, UINT32_MAX-1);
-  shoulderMotor = DCPotMotor(8, 9, A0, 50, 400, 800);
+  shoulderMotor = DCPotMotor(8, 9, A0, 50, 400, 950);
   //elbowMotor = Stepper(15652, 4, 5, 3, 8000, 0, UINT32_MAX/3);
   //wristPitchMotor = Stepper(15652, 6, 7, 18, 2000, 0, UINT32_MAX-1);
 
